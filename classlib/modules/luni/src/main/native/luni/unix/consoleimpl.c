@@ -16,6 +16,11 @@
  */
  
  #include <termios.h>
+ /*  Dhruwat - haiku porting - start */
+ #if defined(HAIKU)
+ #include <unistd.h>
+ #endif
+ /*  Dhruwat - haiku porting - end */
  #include "exceptions.h"
  #include "consoleimpl.h"
  

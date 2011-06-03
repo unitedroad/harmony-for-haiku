@@ -40,7 +40,10 @@
 #include <errno.h>
 #include "hyport.h"
 
-#if defined(_SEM_SEMUN_UNDEFINED) || defined(AIX) || defined(ZOS)
+/*  Dhruwat - haiku porting - start */
+/* #if defined(_SEM_SEMUN_UNDEFINED) || defined(AIX) || defined(ZOS) */
+#if defined(_SEM_SEMUN_UNDEFINED) || defined(AIX) || defined(ZOS) || defined(HAIKU)
+/*  Dhruwat - haiku porting - end */
 /* arg for semctl semaphore system calls. */
 union semun
 {

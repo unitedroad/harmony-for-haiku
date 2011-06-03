@@ -50,7 +50,10 @@
 #define PLATFORM_STRNICMP _strnicmp
 #endif
 
-#if defined(LINUX) || defined(FREEBSD) || defined(AIX) || defined(MACOSX) || defined(ZOS)
+/*  Dhruwat - haiku porting - start */
+#if defined(LINUX) || defined(FREEBSD) || defined(AIX) || defined(MACOSX) || defined(ZOS) || defined(HAIKU)
+/* #if defined(LINUX) || defined(FREEBSD) || defined(AIX) || defined(MACOSX) || defined(ZOS) */
+/*  Dhruwat - haiku porting - start */
 #define PLATFORM_STRNICMP strncasecmp
 #endif
 

@@ -40,7 +40,11 @@
 #include <stdlib.h>
 
 #if !defined(ZOS)
+#if defined(HAIKU)
+#include <sys/socket.h>
+#else /* defined(HAIKU) */
 #include <sys/socketvar.h>
+#endif
 #else /* !defined(ZOS) */
 #include <arpa/inet.h>
 #include <xti.h>

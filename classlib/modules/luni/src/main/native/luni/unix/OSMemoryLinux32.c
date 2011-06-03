@@ -81,7 +81,14 @@ int getPageSize()
 
 JNIEXPORT jint JNICALL Java_org_apache_harmony_luni_platform_OSMemory_loadImpl
   (JNIEnv * env, jobject thiz, jlong addr, jlong size){
-#if !defined(ZOS)
+/*  Dhruwat - haiku porting - start */
+#if !defined(ZOS) && !defined(HAIKU)
+/*#if !defined(ZOS) */ /*This method seems to be loading
+						 an area of the process' memory 
+						 by locking and unlocking that area,
+						 so this method is redundant for Haiku
+						 as it does not have mlock and munlock */
+/*  Dhruwat - haiku porting - end */
    if(mlock((void *)((IDATA)addr), size)!=-1)
    {
       if(munlock((void *)((IDATA)addr),size)!=-1)
@@ -99,6 +106,14 @@ JNIEXPORT jint JNICALL Java_org_apache_harmony_luni_platform_OSMemory_loadImpl
 
 JNIEXPORT jboolean JNICALL Java_org_apache_harmony_luni_platform_OSMemory_isLoadedImpl
   (JNIEnv * env, jobject thiz, jlong addr, jlong size){
+/*  Dhruwat - haiku porting - start */
+#if defined(HAIKU) /*This method seems to be loading
+						 an area of the process' memory 
+						 by locking and unlocking that area,
+						 so this method is redundant for Haiku
+						 as it does not have mincore */
+return 1;
+#else
 #if !defined(ZOS)
 	  PORT_ACCESS_FROM_ENV (env);
   	  jboolean result = 0;
@@ -131,6 +146,8 @@ JNIEXPORT jboolean JNICALL Java_org_apache_harmony_luni_platform_OSMemory_isLoad
 #else
       return ;
 #endif /* !defined(ZOS) */
+#endif /* defined(HAIKU) */
+/*  Dhruwat - haiku porting - end */
   }
 
 JNIEXPORT jint JNICALL Java_org_apache_harmony_luni_platform_OSMemory_flushImpl

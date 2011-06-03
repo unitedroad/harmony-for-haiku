@@ -24,7 +24,10 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/stat.h>
-#if defined(FREEBSD) || defined(AIX) || defined(ZOS) || defined(MACOSX)
+/*  Dhruwat - haiku porting - start */
+/* #if defined(FREEBSD) || defined(AIX) || defined(ZOS) || defined(MACOSX) */
+#if defined(FREEBSD) || defined(AIX) || defined(ZOS) || defined(MACOSX) || defined(HAIKU)
+/*  Dhruwat - haiku porting - end */
 #include <sys/types.h>
 #include <sys/socket.h>
 #else
@@ -298,6 +301,11 @@ Java_org_apache_harmony_luni_platform_OSFileSystem_writev
 JNIEXPORT jlong JNICALL Java_org_apache_harmony_luni_platform_OSFileSystem_transferImpl
   (JNIEnv *env, jobject thiz, jlong fd, jobject sd, jlong offset, jlong count)
 {
+/*  Dhruwat - haiku porting - start */
+#if defined(HAIKU) /*need to add functionality for Haiku */
+return -1;
+#else
+/*  Dhruwat - haiku porting - end */
   OSSOCKET socket;
   //TODO IPV6
   hysocket_t hysocketP =
@@ -338,6 +346,7 @@ JNIEXPORT jlong JNICALL Java_org_apache_harmony_luni_platform_OSFileSystem_trans
   return sendfile(socket,(int)fd-FD_BIAS,(off_t *)&off,(size_t)count);
 #endif
 #endif
+#endif /* #if defined(HAIKU) */
 }
 
 

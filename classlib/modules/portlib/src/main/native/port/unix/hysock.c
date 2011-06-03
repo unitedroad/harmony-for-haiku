@@ -39,6 +39,11 @@
 #include <sys/ioctl.h>
 #include <net/if.h>             /* for struct ifconf */
 
+/*  Dhruwat - haiku porting - start */
+#if defined(HAIKU)
+#include <sys/sockio.h>
+#endif
+/*  Dhruwat - haiku porting - end */
 #if !defined(ZOS)
 #include <sys/poll.h>
 #else
@@ -345,8 +350,14 @@ map_sockettype_Hy_to_OS (I_32 socket_type)
       return OSSOCK_DGRAM;
     case HYSOCKET_RAW:
       return OSSOCK_RAW;
+    /*  Dhruwat - haiku porting - start */  
+    /*case HYSOCKET_RDM:
+      return OSSOCK_RDM; */
+    #if !defined(HAIKU) /* should it be made more general to include all Operating systems not supporting RDM? */
     case HYSOCKET_RDM:
       return OSSOCK_RDM;
+    #endif    
+    /*  Dhruwat - haiku porting - end */
     case HYSOCKET_SEQPACKET:
       return OSSOCK_SEQPACKET;
     }

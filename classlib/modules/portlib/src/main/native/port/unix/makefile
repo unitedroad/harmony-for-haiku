@@ -36,6 +36,11 @@ BUILDFILES += stubs/hycpu.o stubs/hyipcmutex.o stubs/hyshmem.o \
               stubs/hyshsem.o stubs/hyvmem.o
 else
 BUILDFILES += hycpu.o hyipcmutex.o hyshmem.o hyshsem.o $(HY_OS)/hyvmem.o
+#BUILDFILES += hycpu.o hyipcmutex.o hyshsem.o $(HY_OS)/hyvmem.o
+endif
+
+ifeq ($(OSTYPE), Haiku)
+OSLIBS += -lnetwork -liconv -llocale
 endif
 
 ifeq ($(HY_NO_THR),true)

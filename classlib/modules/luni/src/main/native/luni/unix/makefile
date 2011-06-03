@@ -43,7 +43,9 @@ BUILDFILES = \
 MDLLIBFILES += $(LIBPATH)libhyfdlibm.a \
 	$(LIBPATH)libvmi$(HY_LINKLIB_SUFFIX)
 
+ifneq ($(OSTYPE), Haiku)
 OSLIBS += -lm
+endif
 
 DLLNAME = $(DLLPATH)libhyluni$(HY_SHLIB_SUFFIX)
 EXPNAME = HYLUNI_0.1

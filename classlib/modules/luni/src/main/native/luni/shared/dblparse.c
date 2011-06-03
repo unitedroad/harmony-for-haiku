@@ -22,7 +22,10 @@
 #include "harmonyglob.h"
 #include "exceptions.h"
 
-#if defined(LINUX) || defined(FREEBSD) || defined(ZOS) || defined(MACOSX) || defined(AIX)
+/*  Dhruwat - haiku porting - start */
+/*#if defined(LINUX) || defined(FREEBSD) || defined(ZOS) || defined(MACOSX) || defined(AIX) */
+#if defined(LINUX) || defined(FREEBSD) || defined(ZOS) || defined(MACOSX) || defined(AIX) || defined(HAIKU)
+/*  Dhruwat - haiku porting - end */
 #define USE_LL
 #endif
 

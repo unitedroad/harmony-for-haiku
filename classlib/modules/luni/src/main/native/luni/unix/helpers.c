@@ -19,6 +19,11 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <sys/ioctl.h>
+/*  Dhruwat - haiku porting - start */
+#if defined(HAIKU) /* || defined(_HAVE_SYS_IO_H) */
+#include <sys/sockio.h>
+#endif
+/*  Dhruwat - haiku porting - end */
 #include <net/if.h>
 #include <netinet/in.h>
 

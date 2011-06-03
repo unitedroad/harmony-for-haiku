@@ -15,7 +15,10 @@
  *  limitations under the License.
  */
 
-#if  defined(__linux__) || defined(MACOSX)
+/*  Dhruwat - haiku porting - start */
+/*#if  defined(__linux__) || defined(MACOSX)*/
+#if  defined(__linux__) || defined(MACOSX) || defined(HAIKU)
+/*  Dhruwat - haiku porting - end */
     #include <stdint.h>
 #else
     #include <stddef.h>

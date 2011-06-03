@@ -204,7 +204,11 @@ extern "C"
     hythread_lib_clear_flags PROTOTYPE ((UDATA flags));
   extern HY_CFUNC void VMCALL
     hythread_priority_interrupt PROTOTYPE ((hythread_t thread));
-  extern HY_CFUNC void VMCALL NORETURN
+ /*  Dhruwat - haiku porting - start
+ extern HY_CFUNC void VMCALL NORETURN
+    hythread_exit PROTOTYPE ((hythread_monitor_t monitor));
+  Dhruwat - haiku porting - end */
+  extern HY_CFUNC void VMCALL
     hythread_exit PROTOTYPE ((hythread_monitor_t monitor));
   extern HY_CFUNC IDATA VMCALL
     hythread_monitor_exit_using_threadId

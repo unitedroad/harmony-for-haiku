@@ -23,8 +23,10 @@ BUILDFILES = \
 	$(SHAREDSUB)thread_copyright.o $(HY_ARCH)/thrhelp.o $(HY_ARCH)/thrspinlock.o \
 	$(SHAREDSUB)hythread.o $(SHAREDSUB)hythreadinspect.o linuxonexit.o priority.o \
 	rasthrsup.o $(SHAREDSUB)rwmutex.o thrcreate.o thrdsup.o $(SHAREDSUB)thrprof.o
-
+OSTYPE=$(shell uname)
+ifneq ($(OSTYPE), Haiku)
 OSLIBS += -lpthread
+endif
 MDLLIBFILES = $(LIBPATH)libhypool.a $(LIBPATH)libhycommon.a
 DLLNAME = ../libhythr$(HY_SHLIB_SUFFIX)
 EXPNAME = HYTHR_0.1

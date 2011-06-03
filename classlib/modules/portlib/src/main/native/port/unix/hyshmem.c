@@ -30,7 +30,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/ipc.h>
+
+/*  Dhruwat - haiku porting - start */
+#if !defined(HAIKU)
 #include <sys/shm.h>
+#endif
+ /*  Dhruwat - haiku porting - end */
 #include <errno.h>
 #include <string.h>
 
@@ -121,11 +126,16 @@ IDATA VMCALL
 hyshmem_open (HyPortLibrary * portLibrary, struct hyshmem_handle **handle,
               const char *rootname, I_32 size, I_32 perm)
 {
-  /*TODO: Do we need the length to be longer? */
   char controlFile[HYSH_MAXPATH];
   int retry = RETRY_COUNT;
 
   Trc_PRT_shmem_hyshmem_open_Entry (rootname, size, perm);
+/*  Dhruwat - haiku porting - start */
+#if defined (HAIKU) /*Doing this right now to just get the code compiled */
+return HYPORT_ERROR_SHMEM_OPFAILED;
+#else
+  /*TODO: Do we need the length to be longer? */
+
 
   if (ensureDirectory (portLibrary) == FAILED)
     {
@@ -172,8 +182,10 @@ hyshmem_open (HyPortLibrary * portLibrary, struct hyshmem_handle **handle,
 
   /* max number of retry count reach, return failure */
   portLibrary->file_unlink (portLibrary, controlFile);
-  Trc_PRT_shmem_hyshmem_open_Exit2 ();
   return HYPORT_ERROR_SHMEM_OPFAILED;
+#endif
+  Trc_PRT_shmem_hyshmem_open_Exit2 ();
+/*  Dhruwat - haiku porting - end */
 }
 
 #undef CDEV_CURRENT_FUNCTION
@@ -195,12 +207,20 @@ hyshmem_close (struct HyPortLibrary *portLibrary,
                struct hyshmem_handle **handle)
 {
   Trc_PRT_shmem_hyshmem_close_Entry (*handle);
+/*  Dhruwat - haiku porting - start */
+#if defined (HAIKU) /*Doing this right now to just get the code compiled */
+  Trc_PRT_shmem_hyshmem_close_Exit ();
+  return;
+#else
   portLibrary->shmem_detach (portLibrary, handle);
   portLibrary->mem_free_memory (portLibrary, (*handle)->baseFileName);
   portLibrary->mem_free_memory (portLibrary, *handle);
 
   *handle = NULL;
   Trc_PRT_shmem_hyshmem_close_Exit ();
+#endif
+/*  Dhruwat - haiku porting - end */
+
 }
 
 #undef CDEV_CURRENT_FUNCTION
@@ -220,7 +240,11 @@ hyshmem_attach (struct HyPortLibrary *portLibrary,
 {
   void *region;
   Trc_PRT_shmem_hyshmem_attach_Entry (handle);
-
+/*  Dhruwat - haiku porting - start */
+#if defined (HAIKU) /*Doing this right now to just get the code compiled */
+  Trc_PRT_shmem_hyshmem_attach_Exit (0);
+  return NULL;
+#else
   if (NULL == handle)
     {
       Trc_PRT_shmem_hyshmem_attach_Exit1 ();
@@ -251,6 +275,8 @@ hyshmem_attach (struct HyPortLibrary *portLibrary,
                                      findError_shmat (errno, __errno2 ()));
   Trc_PRT_shmem_hyshmem_attach_Exit2 (errno);
   return NULL;
+#endif
+/*  Dhruwat - haiku porting - end */
 }
 
 #undef CDEV_CURRENT_FUNCTION
@@ -273,9 +299,13 @@ hyshmem_destroy (struct HyPortLibrary * portLibrary,
                  struct hyshmem_handle ** handle)
 {
   IDATA rc;
-
+  
   Trc_PRT_shmem_hyshmem_destroy_Entry (*handle);
-
+/*  Dhruwat - haiku porting - start */
+#if defined (HAIKU) /*Doing this right now to just get the code compiled */
+  Trc_PRT_shmem_hyshmem_destroy_Exit ();
+  return SUCCESS;
+#else
   if (NULL == *handle)
     {
       Trc_PRT_shmem_hyshmem_destroy_Exit ();
@@ -299,6 +329,8 @@ hyshmem_destroy (struct HyPortLibrary * portLibrary,
   portLibrary->shmem_close (portLibrary, handle);
   Trc_PRT_shmem_hyshmem_destroy_Exit ();
   return SUCCESS;
+#endif
+/*  Dhruwat - haiku porting - end */  
 }
 
 #undef CDEV_CURRENT_FUNCTION
@@ -318,6 +350,11 @@ hyshmem_detach (struct HyPortLibrary * portLibrary,
                 struct hyshmem_handle ** handle)
 {
   Trc_PRT_shmem_hyshmem_detach_Entry (*handle);
+/*  Dhruwat - haiku porting - start */
+#if defined (HAIKU) /*Doing this right now to just get the code compiled */
+  Trc_PRT_shmem_hyshmem_detach_Exit ();
+  return SUCCESS;
+#else
   if ((*handle)->regionStart == NULL)
     {
       Trc_PRT_shmem_hyshmem_detach_Exit ();
@@ -333,6 +370,8 @@ hyshmem_detach (struct HyPortLibrary * portLibrary,
   (*handle)->regionStart = NULL;
   Trc_PRT_shmem_hyshmem_detach_Exit ();
   return SUCCESS;
+#endif
+/*  Dhruwat - haiku porting - end */
 }
 
 #undef CDEV_CURRENT_FUNCTION
@@ -455,6 +494,10 @@ UDATA VMCALL
 hyshmem_stat (struct HyPortLibrary * portLibrary, const char *name,
               struct HyPortShmemStatistic * statbuf)
 {
+/*  Dhruwat - haiku porting - start */
+#if defined(HAIKU)
+return -1; /*Doing this only to get the code compiled, this is probably the only place we are returning negative result for Haiku */ 
+#else
   I_32 rc;
   char controlFile[HYSH_MAXPATH];
   struct hyshmem_controlFileFormat *fileContents;
@@ -500,6 +543,8 @@ hyshmem_stat (struct HyPortLibrary * portLibrary, const char *name,
 
   Trc_PRT_shmem_hyshmem_stat_Exit ();
   return 0;
+#endif
+/*  Dhruwat - haiku porting - end */
 }
 
 #undef CDEV_CURRENT_FUNCTION
@@ -551,6 +596,10 @@ static IDATA
 openSharedMemory (HyPortLibrary * portLibrary, struct hyshmem_handle **handle,
                   const char *controlFile)
 {
+/*  Dhruwat - haiku porting - start */
+#if defined(HAIKU) /*Doing this right now only to get the code compiled */
+return FAILED;
+#else
   struct hyshmem_controlFileFormat *info;
   void *region;
   UDATA retryCount = RETRY_COUNT;
@@ -636,6 +685,8 @@ openSharedMemory (HyPortLibrary * portLibrary, struct hyshmem_handle **handle,
   portLibrary->mem_free_memory (portLibrary, info);
 
   return HYPORT_INFO_SHMEM_OPENED;
+#endif
+/*  Dhruwat - haiku porting - end */
 }
 
 #undef CDEV_CURRENT_FUNCTION
@@ -646,6 +697,10 @@ createSharedMemory (HyPortLibrary * portLibrary,
                     struct hyshmem_handle **handle, const char *controlFile,
                     I_32 size, I_32 perm)
 {
+/*  Dhruwat - haiku porting - start */
+#if defined(HAIKU) /*Doing this right now only to get the code compiled */
+return FAILED;
+#else
   I_32 projid = 1;
   key_t fkey;
   I_32 shmid;
@@ -757,6 +812,8 @@ createSharedMemory (HyPortLibrary * portLibrary,
 
   Trc_PRT_shmem_createSharedMemory_Exit ();
   return HYPORT_INFO_SHMEM_CREATED;
+#endif
+/*  Dhruwat - haiku porting - end */
 }
 
 #undef CDEV_CURRENT_FUNCTION

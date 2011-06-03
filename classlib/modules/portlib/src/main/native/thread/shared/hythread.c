@@ -44,7 +44,10 @@ static IDATA init_global_monitor PROTOTYPE ((hythread_library_t lib));
 static void tls_finalize PROTOTYPE ((hythread_t thread));
 static void free_monitor_pools PROTOTYPE ((void));
 static void *VMCALL thread_malloc PROTOTYPE ((void *unused, U_32 size));
+/*  Dhruwat - haiku porting - start
 static void NORETURN internal_exit PROTOTYPE ((void));
+  Dhruwat - haiku porting - end */
+static void internal_exit PROTOTYPE ((void));
 static IDATA monitor_wait
 PROTOTYPE ((hythread_monitor_t monitor, I_64 millis, IDATA nanos,
             IDATA interruptable));
@@ -1529,7 +1532,11 @@ hythread_detach (hythread_t thread)
  * @param[in] monitor monitor to be exited before exiting (ignored if NULL)
  * @return none
  */
+ /*  Dhruwat - haiku porting - start
 void VMCALL NORETURN
+hythread_exit (hythread_monitor_t monitor)
+  Dhruwat - haiku porting - end */
+void VMCALL
 hythread_exit (hythread_monitor_t monitor)
 {
   hythread_t self = MACRO_SELF ();
@@ -1859,7 +1866,11 @@ init_global_monitor (hythread_library_t lib)
  * 
  * If the thread has been detached it is destroyed.
  */
+ /*  Dhruwat - haiku porting - start
 static void NORETURN
+internal_exit (void)
+  Dhruwat - haiku porting - end */
+static void
 internal_exit (void)
 {
 

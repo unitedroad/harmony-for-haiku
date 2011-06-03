@@ -26,7 +26,10 @@
 #include <setjmp.h>
 #include "hycomp.h"
 
-#if defined(LINUX) || defined(MACOSX)
+/* Dhruwat - haiku porting - start 
+#if defined(LINUX) || defined(MACOSX) 
+ Dhruwat - haiku porting - end */
+#if defined(LINUX) || defined(MACOSX) ||defined(HAIKU)
 #include <sys/time.h>
 #endif
 
@@ -38,7 +41,10 @@ typedef pthread_cond_t COND;
 #define WRAPPER_TYPE void*
 typedef void *WRAPPER_ARG;
 #define WRAPPER_RETURN() return NULL
-#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX)
+/*  Dhruwat - haiku porting - start
+ #if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) 
+  Dhruwat - haiku porting - end */
+#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) || defined(HAIKU)
 #include <semaphore.h>
 typedef sem_t OSSEMAPHORE;
 #else
@@ -73,7 +79,10 @@ extern int priority_map[];
 #define HYDIV div
 /* do we really need nanosecond clock accuracy even on platforms which support gettime? */
 
-#if defined(LINUX) || defined(MACOSX)
+/* Dhruwat - haiku porting - start 
+#if defined(LINUX) || defined(MACOSX) 
+ Dhruwat - haiku porting - end */
+#if defined(LINUX) || defined(MACOSX) ||defined(HAIKU)
 #define SETUP_TIMEOUT(ts_, millis, nanos) {								\
 		struct timeval tv_;											\
 		HYDIV_T secs_ = HYDIV(millis, 1000);					\
@@ -140,10 +149,13 @@ extern int priority_map[];
 #define THREAD_SELF() (pthread_self())
 
 /* THREAD_YIELD */
-#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX)
+/*  Dhruwat - haiku porting - start */
+/* if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) */
+#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) || defined(HAIKU)
 #define THREAD_YIELD() (sched_yield())
 #endif
-
+/*  Dhruwat - haiku porting - start */
+ 
 #if defined(LINUX) && defined(HARDHAT)
 #undef THREAD_YIELD             /* undo the one defined above */
 #define THREAD_YIELD() (usleep(0))
@@ -161,6 +173,7 @@ extern int priority_map[];
 /* THREAD_CANCEL */
 /* pthread_cancel is asynchronous. Use join to wait for it to complete */
 #define THREAD_CANCEL(thread) (pthread_cancel(thread) || pthread_join(thread, NULL))
+
 
 /* COND_NOTIFY_ALL */
 #define COND_NOTIFY_ALL(cond) pthread_cond_broadcast(&(cond))
@@ -200,54 +213,78 @@ extern int priority_map[];
 #define THREAD_SET_PRIORITY(thread, priority) set_pthread_priority((thread), (priority))
 
 /* SEM_CREATE */
-#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX)
+/*  Dhruwat - haiku porting - start
+ #if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) 
+  Dhruwat - haiku porting - end */
+#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) || defined(HAIKU)
 #define SEM_CREATE(initValue) thread_malloc(NULL, sizeof(OSSEMAPHORE))
 #else
 #define SEM_CREATE(initValue)
 #endif
 
 /* SEM_INIT */
-#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX)
+/*  Dhruwat - haiku porting - start
+ #if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) 
+  Dhruwat - haiku porting - end */
+#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) || defined(HAIKU)
 #define SEM_INIT(sm, pshrd, inval)	(sem_init((sem_t*)sm, pshrd, inval))
 #else
 #define SEM_INIT(sm,pshrd,inval)
 #endif
 
 /* SEM_DESTROY */
-#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX)
+/*  Dhruwat - haiku porting - start
+ #if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) 
+  Dhruwat - haiku porting - end */
+#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) || defined(HAIKU)
 #define SEM_DESTROY(sm)	(sem_destroy((sem_t*)sm))
 #else
 #define SEM_DESTROY(sm)
 #endif
 
 /* SEM_FREE */
-#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX)
+/*  Dhruwat - haiku porting - start
+ #if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) 
+  Dhruwat - haiku porting - end */
+#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) || defined(HAIKU)
 #define	SEM_FREE(s)  	thread_free(NULL, (sem_t*)s);
 #endif
 
 /* SEM_POST */
-#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX)
+/*  Dhruwat - haiku porting - start
+ #if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) 
+  Dhruwat - haiku porting - end */
+#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) || defined(HAIKU)
 #define SEM_POST(smP)	(sem_post((sem_t*)smP))
 #else
 #define SEM_POST(sm)
 #endif
 
 /* SEM_WAIT */
-#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX)
+/*  Dhruwat - haiku porting - start
+ #if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) 
+  Dhruwat - haiku porting - end */
+#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) || defined(HAIKU)
 #define SEM_WAIT(smP)	(sem_wait((sem_t*)smP))
 #else
 #define SEM_WAIT(sm)
 #endif
 
 /* SEM_TRYWAIT */
-#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX)
+/*  Dhruwat - haiku porting - start
+ #if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) 
+  Dhruwat - haiku porting - end */
+#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) || defined(HAIKU)
 #define SEM_TRYWAIT(smP)	(sem_trywait(smP))
 #else
 #define SEM_TRYWAIT(sm)
 #endif
 
 /* SEM_GETVALUE */
-#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX)
+/*  Dhruwat - haiku porting - start
+ #if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) 
+  Dhruwat - haiku porting - end */
+#if defined(LINUX) || defined(FREEBSD) || defined(MACOSX) || defined(HAIKU)
 #define SEM_GETVALUE(smP, intP)	(sem_getvalue(smP, intP))
 #else
 #define SEM_GETVALUE(sm)
