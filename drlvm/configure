@@ -1,0 +1,41 @@
+#!/bin/sh
+DEPLOY_DIR=deploy/
+DEPENDS_DIR=${DEPLOY_DIR}depends/
+APR_URL=http://archive.apache.org/dist/apr/
+TAR_GZ_EXT=.tar.gz
+APR_PREFIX=apr-1.3.9
+APR_FILE=${APR_PREFIX}${TAR_GZ_EXT}
+TMP_DIR=tmp/
+CONFIG_GUESS_URL="http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD"
+CONFIG_SUB_URL="http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD"
+
+setup ()
+{
+	mkdir -p ${DEPENDS_DIR}
+	mkdir ${DEPLOY_DIR}include/
+	return
+}
+setupapr ()
+{
+	wget ${APR_URL}${APR_FILE} --directory-prefix=${DEPENDS_DIR}
+	mkdir ${TMP_DIR}
+	tar -zxvf ${DEPENDS_DIR}${APR_FILE} -C ${TMP_DIR}
+	wget ${CONFIG_GUESS_URL} -O${TMP_DIR}${APR_PREFIX}/build/config.guess #we need to cat apr.h
+	wget ${CONFIG_SUB_URL} -O${TMP_DIR}${APR_PREFIX}/build/config.sub     #config.guess and config.sub
+	SAVEDPWD=$(pwd)
+	cd ${TMP_DIR}${APR_PREFIX}
+	echo $(pwd)
+	sh configure
+	cd include
+	$(cat apr.h|sed 's/#define APR_HAS_OS_UUID           1/#define APR_HAS_OS_UUID           0/' | \
+	sed 's/APR_HAS_POSIXSEM_SERIALIZE        0/APR_HAS_POSIXSEM_SERIALIZE        1/'| \
+	sed 's/#define APR_HAS_PROC_PTHREAD_SERIALIZE    0/#define APR_HAS_PROC_PTHREAD_SERIALIZE    1/' >> apr.h.tmp)
+	mv apr.h.tmp apr.h
+	cd ${SAVEDPWD}
+	#sed 's/${DEPLOY_DIR}include/	
+	cp ${TMP_DIR}${APR_PREFIX}/include/*.h ${DEPLOY_DIR}include/
+	return
+}
+
+setup
+setupapr
