@@ -140,7 +140,9 @@ extern "C" {
  */
 //@{
 
-#if defined(LINUX) || defined(FREEBSD)
+/*  Dhruwat - haiku porting - start */
+#if defined(LINUX) || defined(FREEBSD) ||defined(HAIKU)
+/*  Dhruwat - haiku porting - end */
 #include <pthread.h>
 #define osmutex_t pthread_mutex_t
 #define hycond_t pthread_cond_t
@@ -158,11 +160,21 @@ extern "C" {
 #define osthread_t pthread_t
 #define thread_context_t ucontext_t
 
+/*  Dhruwat - haiku porting - start */
+#elif defined (HAIKU)
+#include <signal.h>
+#define osthread_t pthread_t
+#define thread_context_t ucontext_t
+/*  Dhruwat - haiku porting - end */
+
 #elif _WIN32
 
 #define osthread_t HANDLE
 #define thread_context_t CONTEXT
-
+/*  Dhruwat - haiku porting - start */
+#elif defined(HAIKU)
+#define osthread_t pthread_t
+/*  Dhruwat - haiku porting - end */
 #else // !_WIN32 && !__linux__
 #error "threading is only supported on __linux__ or _WIN32"
 #endif // !_WIN32 && !__linux__

@@ -77,7 +77,10 @@
  * <li><code>BOOLEAN</code>      - something that can be zero or non-zero</li>
  * </ul>
  */
-#if defined(LINUX) || defined(FREEBSD)
+/*  Dhruwat - haiku porting - start */
+/* #if defined(LINUX) || defined(FREEBSD) */
+#if defined(LINUX) || defined(FREEBSD) || defined(HAIKU)
+/*  Dhruwat - haiku porting - end */
 #if defined(_EM64T_) || defined(_IPF_)
 typedef long int I_64;
 typedef unsigned long int U_64;
@@ -155,7 +158,10 @@ typedef char I_8;
 #endif
 #define PVMCALL VMCALL *
 
-#if defined(LINUX) || defined(FREEBSD)
+/*  Dhruwat - haiku porting - start */
+/* #if defined(LINUX) || defined(FREEBSD) */
+#if defined(LINUX) || defined(FREEBSD) | defined(HAIKU)
+/*  Dhruwat - haiku porting - start */
     typedef U_32 BOOLEAN;
 #elif defined(_WIN32)
 #   if _MSC_VER >= 1300 || __INTEL_COMPILER

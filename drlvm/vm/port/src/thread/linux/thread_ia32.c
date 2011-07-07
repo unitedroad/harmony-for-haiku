@@ -17,7 +17,13 @@
 
 
 #define  _GNU_SOURCE
+/*  Dhruwat - haiku porting - start */
+#if !defined(HAIKU)
 #include <sys/ucontext.h>
+#else
+#include <signal.h>
+#endif
+/*  Dhruwat - haiku porting - end */
 #include <stdarg.h>
 #include "port_thread.h"
 
@@ -51,7 +57,9 @@ void port_thread_regs_to_context(ucontext_t *uc, Registers* regs)
     uc->uc_mcontext.gregs[REG_EFL] = regs->eflags;
 }
 
+
 #elif defined(FREEBSD)
+
 void port_thread_context_to_regs(Registers* regs, ucontext_t *uc)
 {
     regs->eax = uc->uc_mcontext.mc_eax;
@@ -78,6 +86,36 @@ void port_thread_regs_to_context(ucontext_t *uc, Registers* regs)
     uc->uc_mcontext.mc_eip = regs->eip;
     uc->uc_mcontext.mc_esp = regs->esp;
     uc->uc_mcontext.mc_eflags = regs->eflags;
+}
+
+#elif defined(HAIKU)
+
+void port_thread_context_to_regs(Registers* regs, ucontext_t *uc)
+{
+    regs->eax = uc->uc_mcontext.eax;
+    regs->ecx = uc->uc_mcontext.ecx;
+    regs->edx = uc->uc_mcontext.edx;
+    regs->edi = uc->uc_mcontext.edi;
+    regs->esi = uc->uc_mcontext.esi;
+    regs->ebx = uc->uc_mcontext.ebx;
+    regs->ebp = uc->uc_mcontext.ebp;
+    regs->eip = uc->uc_mcontext.eip;
+    regs->esp = uc->uc_mcontext.esp;
+    regs->eflags = uc->uc_mcontext.eflags;
+}
+
+void port_thread_regs_to_context(ucontext_t *uc, Registers* regs)
+{
+    uc->uc_mcontext.eax = regs->eax;
+    uc->uc_mcontext.ecx = regs->ecx;
+    uc->uc_mcontext.edx = regs->edx;
+    uc->uc_mcontext.edi = regs->edi;
+    uc->uc_mcontext.esi = regs->esi;
+    uc->uc_mcontext.ebx = regs->ebx;
+    uc->uc_mcontext.ebp = regs->ebp;
+    uc->uc_mcontext.eip = regs->eip;
+    uc->uc_mcontext.esp = regs->esp;
+    uc->uc_mcontext.eflags = regs->eflags;
 }
 
 #else

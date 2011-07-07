@@ -32,6 +32,12 @@
 #if defined(FREEBSD)
 #define STACK_MMAP_ATTRS \
     (MAP_FIXED | MAP_PRIVATE | MAP_ANON | MAP_STACK)
+/*  Dhruwat - haiku porting - start */
+#elif defined (HAIKU)
+#define STACK_MMAP_ATTRS \
+    (MAP_FIXED | MAP_PRIVATE | MAP_ANON )
+/*TODO - should we do something about MAP_STACK/MAP_GROWSDOWN for Haiku?*/
+/*  Dhruwat - haiku porting - end */
 #else
 #ifdef _IPF_
 #define STACK_MMAP_ATTRS \

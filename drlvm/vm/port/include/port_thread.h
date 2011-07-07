@@ -29,7 +29,11 @@
 #include "port_general.h"
 
 /* Thread context definition for UNIX-like systems */
-#if defined(LINUX) || defined(FREEBSD) 
+/*  Dhruwat - haiku porting - start */
+/*#if defined(LINUX) || defined(FREEBSD) */
+#if defined(LINUX) || defined(FREEBSD) || defined (HAIKU) 
+/*Dhruwat - maybe we should change the behaviour for Haiku*/
+/*  Dhruwat - haiku porting - end */
 #if defined(LINUX)
 
 #include <sys/types.h>
