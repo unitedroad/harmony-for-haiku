@@ -212,7 +212,11 @@ bool CPUID::isSSE2Supported() {
         cpuid
         mov    fflags, edx
     };
-#elif defined (__linux__) || defined(FREEBSD)
+/*  Dhruwat - haiku porting - start */
+/* #elif defined (__linux__) || defined(FREEBSD) */
+/*TODO - Is it safe to use the same code for haiku? */
+#elif defined (__linux__) || defined(FREEBSD) || defined(HAIKU)
+/*  Dhruwat - haiku porting - end */
     unsigned int stub;
     //ebx must be restored for -fPIC
      __asm__ __volatile__ (

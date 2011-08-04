@@ -223,6 +223,12 @@ public:
 
     // BEGIN PRED DEPRECATED
     virtual void            branch(CompareOp::Operators,CompareOp::Types,CG_OpndHandle* src1,CG_OpndHandle* src2) = 0;
+    /*  Dhruwat - haiku porting - start */
+#if defined (HAIKU)
+#undef bzero
+#endif
+    /*  Dhruwat - haiku porting - start */
+
     virtual void            bzero(CompareZeroOp::Types,CG_OpndHandle* src) = 0;
     virtual void            bnzero(CompareZeroOp::Types,CG_OpndHandle* src) = 0;
     // END PRED DEPRECATED

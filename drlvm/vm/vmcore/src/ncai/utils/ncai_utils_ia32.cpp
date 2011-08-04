@@ -116,6 +116,57 @@ static void ncai_registers_to_context(NcaiRegisters* pregs, ucontext_t* pcontext
     pcontext->uc_mcontext.mc_eip  = pregs->eip;
     pcontext->uc_mcontext.mc_eflags  = pregs->eflags;
 }
+
+/*  Dhruwat - haiku porting - start */
+#elif defined(HAIKU)
+
+static void ncai_context_to_registers(ucontext_t* pcontext, NcaiRegisters* pregs)
+{
+    pregs->eax  = pcontext->uc_mcontext.eax;
+    pregs->ebx  = pcontext->uc_mcontext.ebx;
+    pregs->ecx  = pcontext->uc_mcontext.ecx;
+    pregs->edx  = pcontext->uc_mcontext.edx;
+    pregs->esp  = pcontext->uc_mcontext.esp;
+    pregs->ebp  = pcontext->uc_mcontext.ebp;
+    pregs->esi  = pcontext->uc_mcontext.esi;
+    pregs->edi  = pcontext->uc_mcontext.edi;
+    /*
+    TODO
+    pregs->ds = pcontext->uc_mcontext.mc_ds;
+    pregs->es = pcontext->uc_mcontext.mc_es;
+    pregs->fs = pcontext->uc_mcontext.mc_fs;
+    pregs->gs = pcontext->uc_mcontext.mc_gs;
+    pregs->ss = pcontext->uc_mcontext.mc_ss;
+    pregs->cs = pcontext->uc_mcontext.mc_cs;
+    */
+    pregs->eip    = pcontext->uc_mcontext.eip;
+    pregs->eflags = pcontext->uc_mcontext.eflags;
+}
+
+static void ncai_registers_to_context(NcaiRegisters* pregs, ucontext_t* pcontext)
+{
+    pcontext->uc_mcontext.eax  = pregs->eax;
+    pcontext->uc_mcontext.ebx  = pregs->ebx;
+    pcontext->uc_mcontext.ecx  = pregs->ecx;
+    pcontext->uc_mcontext.edx  = pregs->edx;
+    pcontext->uc_mcontext.esp  = pregs->esp;
+    pcontext->uc_mcontext.ebp  = pregs->ebp;
+    pcontext->uc_mcontext.esi  = pregs->esi;
+    pcontext->uc_mcontext.edi  = pregs->edi;
+    /*
+    TODO
+    pcontext->uc_mcontext.mc_ds = pregs->ds;
+    pcontext->uc_mcontext.mc_es = pregs->es;
+    pcontext->uc_mcontext.mc_fs = pregs->fs;
+    pcontext->uc_mcontext.mc_gs = pregs->gs;
+    pcontext->uc_mcontext.mc_ss = pregs->ss;
+    pcontext->uc_mcontext.mc_cs = pregs->cs;
+    */
+    pcontext->uc_mcontext.eip  = pregs->eip;
+    pcontext->uc_mcontext.eflags  = pregs->eflags;
+}
+/*  Dhruwat - haiku porting - end */
+
 #else
 
 #ifdef PLATFORM_POSIX

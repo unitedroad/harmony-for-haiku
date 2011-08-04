@@ -127,7 +127,10 @@ void Compiler::gen_prolog(void) {
         // access) to the pages sequentially. In response on read-access to 
         // inaccessible page, the OS grows up the stack, so pages become 
         // accessible.
+#if defined (HAIKU)
+#undef PAGE_SIZE        
         const unsigned PAGE_SIZE = 0x1000;
+#endif
         unsigned pages = 
             (frameSize + m_max_native_stack_depth + 
             PAGE_SIZE -1)/PAGE_SIZE;

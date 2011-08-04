@@ -56,6 +56,12 @@
 #endif
 #include <assert.h>
 
+/*  Dhruwat - haiku porting - start */
+#if defined(HAIKU)
+#include <port_haiku_undefined.h>
+#endif
+/*  Dhruwat - haiku porting - end */
+
 #if defined(FREEBSD)
 #define PTHREAD_MUTEX_RECURSIVE_NP PTHREAD_MUTEX_RECURSIVE
 #endif

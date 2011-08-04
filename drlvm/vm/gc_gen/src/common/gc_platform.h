@@ -29,9 +29,12 @@
 
 #include <assert.h>
 
-#if defined(__linux__) || defined(FREEBSD)
+/*  Dhruwat - haiku porting - start */
+/* #if defined(__linux__) || defined(FREEBSD) */
+#if defined(__linux__) || defined(FREEBSD) || defined(HAIKU)
 #include <ctype.h>
 #endif
+/*  Dhruwat - haiku porting - end */
 
 #ifndef MAP_ANONYMOUS
 #define MAP_ANONYMOUS MAP_ANON
@@ -66,8 +69,11 @@ extern char* large_page_hint;
 #define prefetchnta(pref_addr)	_mm_prefetch((char*)(pref_addr), _MM_HINT_NTA )
 #endif /*ALLOC_PREFETCH*/
 
-#elif defined (__linux__) || defined (FREEBSD)
+/*  Dhruwat - haiku porting - start */
+/*#elif defined (__linux__) || defined (FREEBSD)*/
+#elif defined (__linux__) || defined (FREEBSD) || defined (HAIKU)
 #define FORCE_INLINE inline  __attribute__((always_inline))
+/*  Dhruwat - haiku porting - end */
 
 #ifdef PREFETCH_SUPPORTED
 #define prefetchnta(pref_addr)  __asm__ ("prefetchnta (%0)"::"r"(pref_addr))

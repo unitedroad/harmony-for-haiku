@@ -516,7 +516,11 @@ int port_thread_detach()
 
 int port_thread_set_priority(osthread_t os_thread, int priority)
 {
-#if defined(FREEBSD)
+/*  Dhruwat - haiku porting - start */
+/*#if defined(FREEBSD)*/
+#if defined(FREEBSD) || defined(HAIKU)
+/*  Dhruwat - haiku porting - start */
+/*TODO - check if it ok for Haiku */
     /* Not sure why we don't just use this on linux? - MRH */
     struct sched_param param;
     int policy;
@@ -600,7 +604,10 @@ int port_get_thread_times(osthread_t os_thread, int64* pkernel, int64* puser)
     clockid_t clock_id;
     struct timespec tp;
     int r;
-#ifdef FREEBSD
+/*  Dhruwat - haiku porting - start */
+/*#ifdef FREEBSD*/
+#if defined(FREEBSD) || defined(HAIKU)
+/*  Dhruwat - haiku porting - end */
     return EINVAL; /* TOFIX: Implement */
 #else
 

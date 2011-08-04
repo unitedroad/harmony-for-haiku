@@ -1,29 +1,115 @@
 #!/bin/sh
-DEPLOY_DIR=deploy/
-DEPENDS_DIR=${DEPLOY_DIR}depends/
-APR_URL=http://archive.apache.org/dist/apr/
+
+#These variables should probably be moved to commons.sh
+#common file metadata 
 TAR_GZ_EXT=.tar.gz
+#TMP_DIR=tmp/
+
+
+#main depends url
+DEPENDS_URL=http://svn.apache.org/repos/asf/harmony/standard/depends/
+
+#deploy directory
+DRLVM_HOME=./
+
+source ${DRLVM_HOME}commons.sh
+
+APR_DIR=${ENV_SEMIS_DIR}apr/
+#APR
+APR_URL=http://archive.apache.org/dist/apr/
 APR_PREFIX=apr-1.3.9
 APR_FILE=${APR_PREFIX}${TAR_GZ_EXT}
-TMP_DIR=tmp/
+
+#URL for latest config file
 CONFIG_GUESS_URL="http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD"
 CONFIG_SUB_URL="http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD"
 
 setup ()
 {
-	mkdir -p ${DEPENDS_DIR}
-	mkdir ${DEPLOY_DIR}include/
+	setupenvdeploydir
+	setupdeploydir
+}
+
+setupdeploydir ()
+{
+	if [ ! -e ${DEPENDS_DIR} ]
+	then  
+	  mkdir -p ${DEPENDS_DIR}
+	fi
+	
+	if [ ! -e ${SEMIS_DIR} ]
+	then
+	  mkdir ${SEMIS_DIR}
+	fi
+	
+	if [ ! -e ${DEPLOY_DIR}include/ ]
+	then
+	  mkdir ${DEPLOY_DIR}include/
+	fi
+	
+	if [ ! -e ${DEPLOY_DIR}lib/ ]
+	then
+	  mkdir ${DEPLOY_DIR}lib/
+	fi
+	
+	if [ ! -e ${DEPLOY_DIR}jdk/jre/bin/default/ ]
+	then
+	  mkdir -p ${DEPLOY_DIR}jdk/jre/bin/default/
+	fi
+	
+	if [ ! -e ${DEPLOY_DIR}jdk/include/ ]
+	then
+	  mkdir -p ${DEPLOY_DIR}jdk/include/
+	fi
 	return
 }
+
+#copied to setup.sh
+setupenvdeploydir ()
+{
+	if [ ! -e ${ENV_DEPENDS_DIR} ]
+	then  
+	  mkdir -p ${ENV_DEPENDS_DIR}
+	fi
+	
+	if [ ! -e ${ENV_SEMIS_DIR} ]
+	then
+	  mkdir ${ENV_SEMIS_DIR}
+	fi
+	
+	if [ ! -e ${ENV_DEPLOY_DIR}include/ ]
+	then
+	  mkdir ${ENV_DEPLOY_DIR}include/
+	fi
+	
+	if [ ! -e ${ENV_DEPLOY_DIR}lib/ ]
+	then
+	  mkdir ${ENV_DEPLOY_DIR}lib/
+	fi
+	
+	if [ ! -e ${ENV_DEPLOY_DIR}jdk/jre/bin/default/ ]
+	then
+	  mkdir -p ${ENV_DEPLOY_DIR}jdk/jre/bin/default/
+	fi
+	
+	return
+}
+
 setupapr ()
 {
-	wget ${APR_URL}${APR_FILE} --directory-prefix=${DEPENDS_DIR}
-	mkdir ${TMP_DIR}
-	tar -zxvf ${DEPENDS_DIR}${APR_FILE} -C ${TMP_DIR}
-	wget ${CONFIG_GUESS_URL} -O${TMP_DIR}${APR_PREFIX}/build/config.guess #we need to cat apr.h
-	wget ${CONFIG_SUB_URL} -O${TMP_DIR}${APR_PREFIX}/build/config.sub     #config.guess and config.sub
+	if [ ! -e ${DEPENDS_DIR}${APR_FILE} ]
+	then	
+	  wget ${APR_URL}${APR_FILE} --directory-prefix=${DEPENDS_DIR}
+	fi
+	if [ ! -e ${APR_DIR} ]
+	then
+	  mkdir ${APR_DIR}
+	fi
+	tar -zxvf ${DEPENDS_DIR}${APR_FILE} -C ${APR_DIR}
+	wget ${CONFIG_GUESS_URL} -O${APR_DIR}${APR_PREFIX}/build/config.guess #we need to cat apr.h
+	wget ${CONFIG_SUB_URL} -O${APR_DIR}${APR_PREFIX}/build/config.sub     #config.guess and config.sub
 	SAVEDPWD=$(pwd)
-	cd ${TMP_DIR}${APR_PREFIX}
+	cd ${APR_DIR}${APR_PREFIX}
 	echo $(pwd)
 	sh configure
 	cd include
@@ -31,10 +117,20 @@ setupapr ()
 	sed 's/APR_HAS_POSIXSEM_SERIALIZE        0/APR_HAS_POSIXSEM_SERIALIZE        1/'| \
 	sed 's/#define APR_HAS_PROC_PTHREAD_SERIALIZE    0/#define APR_HAS_PROC_PTHREAD_SERIALIZE    1/' >> apr.h.tmp)
 	mv apr.h.tmp apr.h
+	cd ..
+	make
 	cd ${SAVEDPWD}
 	#sed 's/${DEPLOY_DIR}include/	
-	cp ${TMP_DIR}${APR_PREFIX}/include/*.h ${DEPLOY_DIR}include/
+	cp ${APR_DIR}${APR_PREFIX}/include/*.h ${ENV_DEPLOY_DIR}include/
+	cp ${APR_DIR}${APR_PREFIX}/.libs/libapr-1.a ${ENV_DEPLOY_DIR}lib/
+	
+	
 	return
+}
+
+setupvmcoredep ()
+{
+	wget ${DEPENDS_URL}oss/${APR_FILE} --directory-prefix=${DEPENDS_DIR}
 }
 
 setup

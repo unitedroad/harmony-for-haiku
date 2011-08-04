@@ -497,6 +497,15 @@ typedef struct HyThread_public {
 #   define APR_TLS_USE
 #   define HYTHREAD_FAST_TLS_ATTRIBUTE   
 #   undef HYTHREAD_FAST_TLS
+/* Dhruwat - haiku porting - start */
+#elif defined(HAIKU)
+/*These will lead preprocessor to use APR's tls system for beos(maybe?). 
+We probably should change it to call beos/haiku's own tls_allocate etc*/
+#   define APR_TLS_USE
+#   define HYTHREAD_FAST_TLS_ATTRIBUTE   
+#   undef HYTHREAD_FAST_TLS
+/* Dhruwat - haiku porting - end */
+
 #else
 #   undef HYTHREAD_FAST_TLS
 #endif

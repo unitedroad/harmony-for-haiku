@@ -361,13 +361,19 @@ Edge* ControlFlowGraph::replaceEdgeTarget(Edge* edge, Node* newTarget, bool keep
 bool ControlFlowGraph::isEdgeProfileConsistent(bool checkEdgeProbs, bool checkExecCounts, bool doAssertForClient) {
     assert(hasEdgeProfile());
     bool profileIsUptodate= lastProfileUpdateTraversalNumber > getModificationTraversalNum();
+    /*  Dhruwat - haiku porting - start */
+    bool doAssert = profileIsUptodate || doAssertForClient;
+    /*  Dhruwat - haiku porting - end */
 #ifndef _DEBUG
     if (profileIsUptodate) {
         return true;
     }
 #else
+    /*  Dhruwat - haiku porting - start */
     //do self test in debug version
-    bool doAssert = profileIsUptodate || doAssertForClient;
+    /*Weird weird code?, moved out of macro*/
+    /*bool doAssert = profileIsUptodate || doAssertForClient;*/
+    /*  Dhruwat - haiku porting - end */
 #endif
 
     const Nodes& postOrdered = getNodesPostOrder();

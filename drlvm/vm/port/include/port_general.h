@@ -24,6 +24,18 @@
 #include <apr.h>
 #include <stdlib.h>
 
+/*  Dhruwat - haiku porting - start */
+#if defined (HAIKU)
+#include "port_haiku_undefined.h"
+#endif
+/*  Dhruwat - haiku porting - end */
+
+/*  Dhruwat - haiku porting - start */
+#if defined (HAIKU)
+typedef void (*sig_t) (int);
+#endif
+/*  Dhruwat - haiku porting - end */
+
 #ifndef NULL
 #ifdef __cplusplus
 #   define NULL (0)

@@ -218,8 +218,13 @@ static void insertSOECheck(IRManager& irm, U_32 maxStackUsedByMethod) {
     if (stackToCheck == 0) {
         return;
     }
+/*  Dhruwat - haiku porting - start */
+#if defined (HAIKU)
+#undef PAGE_SIZE
     static const U_32 PAGE_SIZE=0x1000;
-    
+#endif
+/*  Dhruwat - haiku porting - end */
+
     U_32 nPagesToCheck = stackToCheck / PAGE_SIZE;
     Inst* prevInst = irm.getEntryPointInst();
     for(U_32 i=0;i<=nPagesToCheck; i++) {

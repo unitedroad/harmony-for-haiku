@@ -1,25 +1,24 @@
-ifdef VM_HOME
-else
-VM_HOME = ../../
-endif
+VM_HOME ?= ../../
 
-ifdef DRLVM_HOME
-DRLVM_HOME = ./
-else
-DRLVM_HOME = ../../../
-endif
+
+
+DRLVM_HOME ?= ../../../
+
 
 include $(DRLVM_HOME)defines.mk
 INCLUDES = -I$(VM_HOME)include \
   -I$(VM_HOME)port/include \
   -I$(VM_HOME)port/src/thread/include \
-  -I$(DRLVM_HOME)/deploy/include
+  -I$(DRLVM_HOME)build/deploy/include \
+  -I$(DRLVM_HOME)/../classlib/deploy/include
   
 PORT_DEFINES = -DAPR_DECLARE_EXPORT -DBUILDING_VM
 
 CFLAGS += $(PORT_DEFINES)
+
+CXXFLAGS += $(PORT_DEFINES) -fexceptions
   
-all: disasm/linux/disasm.o file_io/linux/canonical.o  file_io/linux/filepath.o \
+OBJECTS = disasm/linux/disasm.o file_io/linux/canonical.o  file_io/linux/filepath.o \
   misc/linux/dso.o  misc/linux/execname.o  misc/linux/sysencoding.o  misc/linux/sysinfo.o \
   misc/linux/timer.o misc/linux/timezone.o misc/linux/user.o \
   vmem/linux/port_vmem.o \
@@ -32,7 +31,18 @@ all: disasm/linux/disasm.o file_io/linux/canonical.o  file_io/linux/filepath.o \
   time/misc_platform_natives.o \
   malloc/port_malloc.o malloc/port_malloc_registrar.o \
 
-
+ifeq ($(OS),HAIKU)
+OBJECTS += haiku/port_haiku_undefined.o
+endif
   
-  
+all: setup port
+.PHONY: setup
+setup:
+	$(SHELL) setup.sh
+	
+port: $(OBJECTS) 
+	$(AR) $(ARFLAGS) libport.a $(OBJECTS)
+	cp libport.a $(DRLVM_HOME)$(ENV)build/deploy/lib
+clean:
+	rm -f libport.a $(OBJECTS)
 
