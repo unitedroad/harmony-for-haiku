@@ -1,0 +1,36 @@
+portlib build-native
+
+./modules/portlib/src/main/native/common/unix/makefile
+./modules/portlib/src/main/native/pool/unix/makefile
+./modules/portlib/src/main/native/thread/unix/makefile
+./modules/portlib/src/main/native/thrstub/unix/makefile
+./modules/portlib/src/main/native/port/unix/makefile
+
+luni build-native-core
+
+./modules/luni/src/main/native/vmi/unix/makefile
+
+archive build-native
+
+./modules/archive/src/main/native/zip/unix/makefile
+./modules/archive/src/main/native/zlib/unix/makefile
+./modules/archive/src/main/native/archive/unix/makefile
+
+luni -build-native-secondary
+
+-build-native-secondary1
+
+./modules/luni/src/main/native/fdlibm/unix/makefile
+./modules/luni/src/main/native/luni/unix/makefile
+./modules/luni/src/main/native/vmls/unix/makefile
+
+-build-hyzip unless="hy.skip.zip.api"
+
+./modules/luni/src/main/native/hyzip/unix/makefile
+
+
+./modules/luni/src/main/native/launcher/unix/makefile
+
+-build-native-secondary2
+
+./modules/luni/src/main/native/launcher/unix/makefile

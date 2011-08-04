@@ -1,0 +1,34 @@
+export HY_HDK=$(CURDIR)/deploy
+
+all: compile
+
+fetch-depends:
+	$(MAKE) -C ./modules/archive/src/main/native/zlib/unix/ -f Makefile_depends
+
+.PHONY: compile
+
+compile:
+#portlib build-native 
+	$(MAKE) -C ./modules/portlib/src/main/native/common/unix/
+	$(MAKE) -C ./modules/portlib/src/main/native/pool/unix/
+	$(MAKE) -C ./modules/portlib/src/main/native/thread/unix/
+#	$(MAKE) -C ./modules/portlib/src/main/native/thrstub/unix/
+	$(MAKE) -C ./modules/portlib/src/main/native/port/unix/
+#luni build-native-core
+	$(MAKE) -C ./modules/luni/src/main/native/vmi/unix/
+#archive build-native
+	$(MAKE) -C ./modules/archive/src/main/native/zip/unix/
+	$(MAKE) -C ./make/fetch-depends/ -f Makefile_archive
+	$(MAKE) -C ./modules/archive/src/main/native/zlib/unix/
+	$(MAKE) -C ./modules/archive/src/main/native/archive/unix/
+#luni -build-native-secondary
+#-build-native-secondary1
+	$(MAKE) -C ./make/fetch-depends/ -f Makefile_luni
+	$(MAKE) -C ./modules/luni/src/main/native/fdlibm/unix/
+	$(MAKE) -C ./modules/luni/src/main/native/luni/unix/
+	$(MAKE) -C ./modules/luni/src/main/native/vmls/unix/
+#-build-hyzip unless="hy.skip.zip.api"
+#	$(MAKE) -C ./modules/luni/src/main/native/hyzip/unix/
+#-build-native-secondary2
+
+	$(MAKE) -C ./modules/luni/src/main/native/launcher/unix/
