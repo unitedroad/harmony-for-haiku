@@ -17,6 +17,7 @@ compile:
 	$(MAKE) -C ./modules/portlib/src/main/native/port/unix/
 #luni build-native-core
 	$(MAKE) -C ./modules/luni/src/main/native/vmi/unix/
+	$(MAKE) -C ./modules/luni/src/main/native/vmi/unix/ -f Makefile_copylib	
 #archive build-native
 	$(MAKE) -C ./modules/archive/src/main/native/zip/unix/
 	$(MAKE) -C ./make-depends/fetch-depends/ -f Makefile_archive
