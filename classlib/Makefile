@@ -12,6 +12,7 @@ compile:
 	$(MAKE) -C ./modules/portlib/src/main/native/common/unix/
 	$(MAKE) -C ./modules/portlib/src/main/native/pool/unix/
 	$(MAKE) -C ./modules/portlib/src/main/native/thread/unix/
+	$(MAKE) -C ./modules/portlib/src/main/native/thread/unix/ -f Makefile_copylib	
 #	$(MAKE) -C ./modules/portlib/src/main/native/thrstub/unix/
 	$(MAKE) -C ./modules/portlib/src/main/native/port/unix/
 #luni build-native-core
