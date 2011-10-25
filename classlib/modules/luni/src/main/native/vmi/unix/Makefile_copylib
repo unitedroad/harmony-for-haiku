@@ -1,0 +1,4 @@
+include $(HY_HDK)/build/make/defines.mk
+
+copy:
+	cp ../libvmi.so $(LIBPATH) 
