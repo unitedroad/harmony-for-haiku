@@ -1,3 +1,4 @@
 include $(HY_HDK)/build/make/defines.mk
 
-cp libhythread.so $(LIBPATH) 
+copy:
+	cp libhythread.so $(LIBPATH) 
