@@ -132,7 +132,14 @@ hysl_open_shared_library (struct HyPortLibrary * portLibrary, char *name,
       openName = mangledName;
     }
 
+/* Dhruwat - haiku porting - start */
+#if defined (HAIKU)
+  handle = dlopen (openName, RTLD_LAZY);
+#else
   handle = dlopen (openName, RTLD_NOW);
+#endif
+/* Dhruwat - haiku porting - end */
+
   if (handle == NULL)
     {
       getDLError (portLibrary, errBuf, sizeof (errBuf));

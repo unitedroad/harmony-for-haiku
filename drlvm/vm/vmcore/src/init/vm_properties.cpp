@@ -29,7 +29,10 @@
 #include "init.h"
 #include "port_modules.h"
 #include "version.h"
-#if defined(FREEBSD)
+/*  Dhruwat - haiku porting - start */
+/*#if defined(FREEBSD)*/
+#if defined(FREEBSD) || defined(HAIKU)
+/*  Dhruwat - haiku porting - end */
 #include <dlfcn.h>
 #endif
 
@@ -112,6 +115,12 @@ static char* get_module_filename(void* code_ptr)
 #if defined(FREEBSD)
     Dl_info info;
     if (dladdr( (const void*)code_ptr, &info) == 0) {
+        return NULL;
+    }
+    return apr_pstrdup(prop_pool, info.dli_fname);
+#elif defined (HAIKU)
+    Dl_info info;
+    if (dladdr(code_ptr, &info) == 0) {
         return NULL;
     }
     return apr_pstrdup(prop_pool, info.dli_fname);

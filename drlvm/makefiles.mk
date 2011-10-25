@@ -2,6 +2,7 @@ interpreter/src/Makefile
 port/src/encoder/Makefile
 port/src/Makefile
 port/src/Makefle_ch
+port/src/Makefle_haikuundef
 thread/src/Makefile
 vmcore/src/verifier-3363/Makefile
 vmcore/src/Makefile

@@ -13,6 +13,7 @@ setup:
 
 compile:
 	$(MAKE) -C $(VM_HOME)port/src/encoder/
+	$(MAKE) -C $(VM_HOME)port/src/ -f Makefile_haikuundef 
 	$(MAKE) -C $(VM_HOME)port/src/
 	$(MAKE) -C $(VM_HOME)port/src/ -f Makefile_ch
 	$(MAKE) -C $(VM_HOME)thread/src/
@@ -54,7 +55,8 @@ deploy-canonical:
 
 clean:
 	$(MAKE) -C $(VM_HOME)port/src/encoder/ clean
-	$(MAKE) -C $(VM_HOME)port/src/ clean
+	$(MAKE) -C $(VM_HOME)port/src/ clean	
+	$(MAKE) -C $(VM_HOME)port/src/ -f Makefile_haikuundef clean
 	$(MAKE) -C $(VM_HOME)port/src/ -f Makefile_ch clean
 	$(MAKE) -C $(VM_HOME)thread/src/ clean
 	$(MAKE) -C $(VM_HOME)vmcore/src/verifier-3363/ clean

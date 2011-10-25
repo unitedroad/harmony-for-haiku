@@ -22,3 +22,9 @@ int pthread_getattr_np(pthread_t thread, pthread_attr_t *attr)
 	return EINVAL;
 }	
 
+int pthread_attr_getguardsize(const pthread_attr_t *attr, 
+	size_t *guardsize)
+{
+	return 0;
+}
+

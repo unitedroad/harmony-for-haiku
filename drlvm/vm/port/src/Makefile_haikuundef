@@ -1,0 +1,29 @@
+VM_HOME ?= ../../
+
+DRLVM_HOME ?= ../../../
+
+
+SOURCE_DIR ?= ./#Location of interpreter makefile
+
+include $(DRLVM_HOME)defines.mk
+INCLUDES = -I$(VM_HOME)vmcore/src/util/linux/include \
+  -I$(VM_HOME)include \
+  -I$(VM_HOME)port/include \
+  -I$(VM_HOME)port/src/encoder/ia32_em64t \
+  -I$(VM_HOME)vmcore/include \
+  -I$(VM_HOME)vmcore/src/util/ia32/base_natives \
+  -I$(VM_HOME)vmcore/src/lil/ia32/include \
+  -I$(DRLVM_HOME)$(ENV)build/deploy/include \
+  
+ifeq ($(OS),HAIKU)
+OBJECTS = haiku/port_haiku_undefined.o
+endif
+
+all: haikuundef
+
+haikuundef: $(OBJECTS)
+	$(SLD) -Wl,--version-script=$(SOURCE_DIR)../build/haikuundef.exp $(SLDFLAGS) -o libhaikuundef.so $(OBJECTS)
+	cp libhaikuundef.so $(DRLVM_HOME)$(ENV)build/deploy/jdk/jre/bin/default
+	
+clean: 
+	rm -f libhaikuundef.so $(OBJECTS)

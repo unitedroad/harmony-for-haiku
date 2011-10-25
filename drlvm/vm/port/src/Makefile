@@ -23,6 +23,7 @@ OBJECTS = disasm/linux/disasm.o file_io/linux/canonical.o  file_io/linux/filepat
   misc/linux/timer.o misc/linux/timezone.o misc/linux/user.o \
   vmem/linux/port_vmem.o \
   atomic/linux/port_atomic.o \
+  file_io/filepath_generic.o \
   thread/linux/port_thread_tls_find.o \
   thread/linux/thread_os.o \
   thread/linux/thread_ia32.o \
@@ -31,9 +32,9 @@ OBJECTS = disasm/linux/disasm.o file_io/linux/canonical.o  file_io/linux/filepat
   time/misc_platform_natives.o \
   malloc/port_malloc.o malloc/port_malloc_registrar.o \
 
-ifeq ($(OS),HAIKU)
-OBJECTS += haiku/port_haiku_undefined.o
-endif
+#ifeq ($(OS),HAIKU)
+#OBJECTS += haiku/port_haiku_undefined.o
+#endif
   
 all: setup port
 .PHONY: setup

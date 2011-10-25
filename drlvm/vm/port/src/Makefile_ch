@@ -46,10 +46,12 @@ OBJECTS = modules/native_modules.o modules/unix/native_modules_os.o \
   modules/unix/haiku/native_modules_procmap.o \
   
 all: $(OBJECTS)
-	$(SLD) --version-script=$(SOURCE_DIR)../build/ch.exp $(SLDFLAGS) -o libch.so $(OBJECTS) -L$(DRLVM_HOME)$(ENV)build/deploy/lib $(SLDEXTRAFLAGS) -lencoder $(SLDSYSLIBS)  
+	$(AS) $(ASFLAGS) memaccess/linux/memaccess_ia32.s
+	$(AS) $(ASFLAGS) signals/linux/signals_asm_ia32.s
+	$(SLD) --version-script=$(SOURCE_DIR)../build/ch.exp $(SLDFLAGS) -o libch.so memaccess_ia32.o signals_asm_ia32.o $(OBJECTS) -L$(DRLVM_HOME)$(ENV)build/deploy/lib $(SLDEXTRAFLAGS) -lencoder $(SLDSYSLIBS)  
 	cp libch.so $(DRLVM_HOME)$(ENV)build/deploy/jdk/jre/bin/default
 	
 clean: 
-	rm -f libch.so $(OBJECTS)
+	rm -f libch.so memaccess_ia32.o signals_asm_ia32.o $(OBJECTS)
 
 

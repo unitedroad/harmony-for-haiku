@@ -10,6 +10,9 @@ will we run into problems later?
 */
 #ifndef PORT_HAIKU_UNDEFINED 
 #define PORT_HAIKU_UNDEFINED
+#ifdef __cplusplus
+extern "C" {
+#endif 
 /* - Pthreads */
 /* #if defined(FREEBSD) */
 #define PTHREAD_MUTEX_RECURSIVE_NP PTHREAD_MUTEX_RECURSIVE
@@ -24,5 +27,8 @@ extern int pthread_attr_getstack(const pthread_attr_t *attr,
 extern int pthread_attr_setschedpolicy(pthread_attr_t *attr,
 		int policy);
 
+#ifdef __cplusplus
+}
+#endif 
 #endif
 #endif
