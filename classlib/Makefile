@@ -1,11 +1,11 @@
 export HY_HDK=$(CURDIR)/deploy
 
-all: compile
+all: setup compile
 
 fetch-depends:
 	$(MAKE) -C ./modules/archive/src/main/native/zlib/unix/ -f Makefile_depends
 
-.PHONY: compile
+.PHONY: compile setup clean-modules setup-clean
 
 compile:
 #portlib build-native 
@@ -35,13 +35,12 @@ compile:
 
 	$(MAKE) -C ./modules/luni/src/main/native/launcher/unix/
 	
-	$(MAKE) -C ./modules/imageio/src/main/native/pngencoder/unix/
-	$(MAKE) -C ./modules/imageio/src/main/native/jpegencoder/unix/
-	$(MAKE) -C ./modules/security/src/main/native/security/unix/
-	$(MAKE) -C ./modules/nio_char/src/main/native/niochar/unix/
-	$(MAKE) -C ./modules/instrument/src/main/native/instrument/unix/
-	$(MAKE) -C ./modules/misc/src/main/native/accessors/unix/
-clean:
+setup:
+	$(SHELL) -x setup.sh
+	
+clean: clean-modules setup-clean
+
+clean-modules:
 #portlib build-native 
 	$(MAKE) -C ./modules/portlib/src/main/native/common/unix/ clean
 	$(MAKE) -C ./modules/portlib/src/main/native/pool/unix/  clean
@@ -67,9 +66,6 @@ clean:
 
 	$(MAKE) -C ./modules/luni/src/main/native/launcher/unix/  clean
 	
-	$(MAKE) -C ./modules/imageio/src/main/native/pngencoder/unix/ clean
-	$(MAKE) -C ./modules/imageio/src/main/native/jpegencoder/unix/ clean
-	$(MAKE) -C ./modules/security/src/main/native/security/unix/ clean
-	$(MAKE) -C ./modules/nio_char/src/main/native/niochar/unix/ clean
-	$(MAKE) -C ./modules/instrument/src/main/native/instrument/unix/ clean
-	$(MAKE) -C ./modules/misc/src/main/native/accessors/unix/ clean
+setup-clean:
+	rm -r deploy
+
