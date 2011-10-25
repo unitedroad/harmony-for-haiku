@@ -39,6 +39,7 @@ compile:
 	$(MAKE) -C ./modules/imageio/src/main/native/pngencoder/unix/
 	$(MAKE) -C ./modules/imageio/src/main/native/jpegencoder/unix/
 	$(MAKE) -C ./modules/security/src/main/native/security/unix/
+	$(MAKE) -C ./modules/nio/src/main/native/nio/unix/	
 	$(MAKE) -C ./modules/nio_char/src/main/native/niochar/unix/
 	$(MAKE) -C ./modules/instrument/src/main/native/instrument/unix/
 	$(MAKE) -C ./modules/misc/src/main/native/accessors/unix/
@@ -77,6 +78,7 @@ clean-modules:
 	$(MAKE) -C ./modules/imageio/src/main/native/pngencoder/unix/ clean
 	$(MAKE) -C ./modules/imageio/src/main/native/jpegencoder/unix/ clean
 	$(MAKE) -C ./modules/security/src/main/native/security/unix/ clean
+	$(MAKE) -C ./modules/nio/src/main/native/nio/unix/ clean
 	$(MAKE) -C ./modules/nio_char/src/main/native/niochar/unix/ clean
 	$(MAKE) -C ./modules/instrument/src/main/native/instrument/unix/ clean
 	$(MAKE) -C ./modules/misc/src/main/native/accessors/unix/ clean
