@@ -88,7 +88,8 @@ typedef unsigned char U_8;
  * </ul>
  */
 
-#if defined(LINUX) || defined(FREEBSD) || defined(AIX) || defined(MACOSX)
+/*#if defined(LINUX) || defined(FREEBSD) || defined(AIX) || defined(MACOSX)*/
+#if defined(LINUX) || defined(FREEBSD) || defined(AIX) || defined(MACOSX) ||defined(HAIKU)
 
 #define DATA_TYPES_DEFINED
 
