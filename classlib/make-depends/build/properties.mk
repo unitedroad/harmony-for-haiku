@@ -1,0 +1,13 @@
+
+HY_ZIP_API=false
+HY_PORTLIB_STUBS=false
+HY_CFG=debug
+HY_ARCH=x86
+HY_OS=haiku
+HY_PLATFORM=haiku.x86
+HY_NO_THR=false
+HY_THR_NO_DEPLOY=false
+HY_LOCAL_ZLIB=false
+HY_SHLIB_SUFFIX=.so
+HY_LINKLIB_SUFFIX=.so
+            
