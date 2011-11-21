@@ -685,5 +685,9 @@ VMCORE_0.1 {
     *NativeObjectHandles*;
     *interpreter_table*;
     _tag_pointer;
+# Dhruwat - haiku porting - start
+#Workaround for Haiku ticket #8064: dladdr doesn't work for local symbols 
+#Dhruwat - haiku porting - end
+	*init_java_properties*;
   local : *;
 };

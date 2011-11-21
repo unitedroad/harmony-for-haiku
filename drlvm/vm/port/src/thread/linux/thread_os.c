@@ -34,6 +34,8 @@
     (MAP_FIXED | MAP_PRIVATE | MAP_ANON | MAP_STACK)
 /*  Dhruwat - haiku porting - start */
 #elif defined (HAIKU)
+#include <stdio.h>
+#include <kernel/OS.h>
 #define STACK_MMAP_ATTRS \
     (MAP_FIXED | MAP_PRIVATE | MAP_ANON )
 /*TODO - should we do something about MAP_STACK/MAP_GROWSDOWN for Haiku?*/
@@ -244,7 +246,7 @@ static int set_guard_page(port_tls_data_t* tlsdata, Boolean set)
 
     if (!tlsdata)
         tlsdata = get_private_tls_data();
-
+	
     if (!tlsdata)
         return -1;
 
@@ -258,6 +260,7 @@ static int set_guard_page(port_tls_data_t* tlsdata, Boolean set)
     res = mprotect(tlsdata->guard_page_addr, tlsdata->guard_page_size,
                     set ? PROT_NONE : (PROT_READ | PROT_WRITE | PROT_EXEC));
 
+	
     if (res != 0)
         return errno;
 
@@ -342,6 +345,7 @@ static int setup_stack(port_tls_data_t* tlsdata)
             < (size_t)tlsdata->guard_page_addr + tlsdata->guard_page_size)
         return EINVAL;
 
+	
     // maps unmapped part of the stack
     mapping_addr = (size_t)tlsdata->stack_addr - tlsdata->stack_size;
     mapping_size =
@@ -349,7 +353,7 @@ static int setup_stack(port_tls_data_t* tlsdata)
             ~(PSD->guard_page_size - 1);
     ptr = (char*)mmap((void*)mapping_addr, mapping_size,
             STACK_MAPPING_ACCESS, STACK_MMAP_ATTRS, -1, 0);
-
+	
     if (ptr == MAP_FAILED)
         return errno;
 
@@ -363,6 +367,15 @@ static int setup_stack(port_tls_data_t* tlsdata)
 
 inline int find_stack_addr_size(void** paddr, size_t* psize)
 {
+#if defined (HAIKU)
+	int status;
+	thread_info info;
+	thread_id this_thread = find_thread(NULL);
+	status = get_thread_info(this_thread,&info);
+	*paddr = info.stack_base;
+    *psize = (size_t)info.stack_base - (size_t)info.stack_end;
+    return 0;
+#else
     int err;
     pthread_attr_t pthread_attr;
     void* stack_addr;
@@ -373,12 +386,11 @@ inline int find_stack_addr_size(void** paddr, size_t* psize)
 
     err = pthread_attr_init(&pthread_attr);
     if (err != 0) return err;
-
-#if defined(FREEBSD)
+  #if defined(FREEBSD)
     err = pthread_attr_get_np(thread, &pthread_attr);
-#else
+  #else
     err = pthread_getattr_np(thread, &pthread_attr);
-#endif
+  #endif
     if (err != 0) return err;
 
     err = pthread_attr_getstack(&pthread_attr, &stack_addr, &stack_size);
@@ -388,6 +400,7 @@ inline int find_stack_addr_size(void** paddr, size_t* psize)
     *paddr = (void*)((size_t)stack_addr + stack_size);
     *psize = stack_size;
     return 0;
+#endif
 }
 
 static int init_stack(port_tls_data_t* tlsdata, size_t stack_size, Boolean temp)
@@ -399,7 +412,7 @@ static int init_stack(port_tls_data_t* tlsdata, size_t stack_size, Boolean temp)
         return -1;
 
     err = find_stack_addr_size(&tlsdata->stack_addr, &tlsdata->stack_size);
-    if (err != 0) {fprintf(stderr, "init_stack:CP#1\n");return err;}
+    if (err != 0) {fprintf(stderr, "init_stack:CP#1\n"); return err;}
 
     // Workaround for incorrect stack_size returned by pthread_attr_getstack
     // for main thread, while stack_addr + stack_size gives correct stack top

@@ -25,6 +25,7 @@ int pthread_getattr_np(pthread_t thread, pthread_attr_t *attr)
 int pthread_attr_getguardsize(const pthread_attr_t *attr, 
 	size_t *guardsize)
 {
+	*guardsize=4*4096;/*USER_STACK_GUARD_SIZE * B_PAGE_SIZE */
 	return 0;
 }
 

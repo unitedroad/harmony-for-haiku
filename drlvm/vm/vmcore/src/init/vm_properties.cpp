@@ -36,6 +36,8 @@
 #include <dlfcn.h>
 #endif
 
+#include <stdio.h>
+
 inline char* unquote(char *str)
 {
     const char *tokens = " \t\n\r\'\"";
@@ -142,7 +144,13 @@ static char* get_module_filename(void* code_ptr)
 #endif
 }
 
-static void init_java_properties(Properties & properties)
+/* Dhruwat - haiku porting - start */
+/* static void init_java_properties(Properties & properties)*/
+/* Workaround for Haiku ticket #8064: 
+ * dladdr doesn't work for local symbols 
+ */
+void init_java_properties(Properties & properties)
+/*  Dhruwat - haiku porting - end */
 {
     //java part
     //!!! java.compiler property must be defined by EM
@@ -191,11 +199,12 @@ static void init_java_properties(Properties & properties)
     */
     if (! properties.is_set(O_A_H_VM_VMDIR)) {
         char* vm_dir = get_module_filename((void*) &init_java_properties);
-
+		
         if (NULL == vm_dir)
             LDIE(43, "ERROR: Can't determine vm module location. Please specify {0} property." << O_A_H_VM_VMDIR);
 
         char *p = strrchr(vm_dir, PORT_FILE_SEPARATOR);
+        
         if (NULL == p)
             LDIE(43, "ERROR: Can't determine vm module location. Please specify {0} property." << O_A_H_VM_VMDIR);
 
