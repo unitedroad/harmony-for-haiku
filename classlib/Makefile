@@ -27,6 +27,7 @@ compile:
 #-build-native-secondary1
 	$(MAKE) -C ./make-depends/fetch-depends/ -f Makefile_luni
 	$(MAKE) -C ./modules/luni/src/main/native/fdlibm/unix/
+	$(MAKE) -C ./modules/luni/src/main/native/fdlibm/unix/ -f Makefile_fixsymbols
 	$(MAKE) -C ./modules/luni/src/main/native/luni/unix/
 	$(MAKE) -C ./modules/luni/src/main/native/vmls/unix/
 #-build-hyzip unless="hy.skip.zip.api"
