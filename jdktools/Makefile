@@ -1,4 +1,4 @@
-export HY_HDK=../target/hdk
+export HY_HDK=$(ROOT_DIR)/target/hdk
 
 all: setup compile
 
