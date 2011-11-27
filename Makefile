@@ -8,3 +8,4 @@ compile-modules:
 	$(MAKE) -C drlvm
 	@mkdir -p target/hdk
 	@mv drlvm/deploy target/hdk
+	$(MAKE) -C jdktools
