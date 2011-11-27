@@ -32,6 +32,11 @@ setupenvdeploydir ()
 	  mkdir ${ENV_DEPLOY_DIR}lib/
 	fi
 	
+	if [ ! -e ${ENV_DEPLOY_DIR}jdk/include/ ]
+	then
+	  mkdir -p ${ENV_DEPLOY_DIR}jdk/include/
+	fi
+
 	if [ ! -e ${ENV_DEPLOY_DIR}jdk/jre/bin/default/ ]
 	then
 	  mkdir -p ${ENV_DEPLOY_DIR}jdk/jre/bin/default/
