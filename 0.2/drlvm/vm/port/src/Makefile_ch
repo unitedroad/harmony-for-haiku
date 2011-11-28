@@ -1,0 +1,57 @@
+#ifdef VM_HOME
+#else
+#VM_HOME = ../../
+#endif
+#
+#ifdef DRLVM_HOME
+#DRLVM_HOME = ./
+#else
+#DRLVM_HOME = ../../../
+#endif
+
+VM_HOME ?= ../../
+
+DRLVM_HOME ?= ../../../
+
+SOURCE_DIR ?= ./#Location of ch makefile
+
+include $(DRLVM_HOME)defines.mk
+INCLUDES = -I$(VM_HOME)include \
+  -I$(VM_HOME)port/include \
+  -I$(VM_HOME)port/src/signals/include \
+  -I$(VM_HOME)port/src/thread/include \
+  -I$(VM_HOME)port/src/signals/include \
+  -I$(VM_HOME)port/src/crash_handler/include \
+  -I$(VM_HOME)port/src/encoder/ia32_em64t \
+  -I$(VM_HOME)port/src/modules/unix/include \
+  -I$(DRLVM_HOME)build/deploy/include \
+  -I$(DRLVM_HOME)/../classlib/deploy/include
+  
+PORT_DEFINES = -DAPR_DECLARE_EXPORT -DBUILDING_VM -DSTRESS_MALLOC
+
+CFLAGS += $(PORT_DEFINES)
+
+CXXFLAGS += $(PORT_DEFINES) -fexceptions
+
+OBJECTS = modules/native_modules.o modules/unix/native_modules_os.o \
+  thread/linux/thread_os.o thread/linux/port_thread_tls_os.o \
+  thread/linux/thread_ia32.o misc/linux/execname.o \
+  crash_handler/native_unwind.o crash_handler/port_crash_handler.o \
+  crash_handler/stack_dump.o crash_handler/linux/gdb_crash_handler.o \
+  crash_handler/linux/native_unwind_os.o crash_handler/linux/stack_dump_os.o \
+  crash_handler/ia32/native_unwind_arch.o crash_handler/ia32/reg_state.o \
+  memaccess/linux/memaccess.o \
+  signals/port_signals.o signals/linux/signals_common.o \
+  signals/linux/signals_ia32.o \
+  modules/unix/haiku/native_modules_procmap.o \
+  
+all: $(OBJECTS)
+	$(AS) $(ASFLAGS) memaccess/linux/memaccess_ia32.s
+	$(AS) $(ASFLAGS) signals/linux/signals_asm_ia32.s
+	$(SLD) --version-script=$(SOURCE_DIR)../build/ch.exp $(SLDFLAGS) -o libch.so memaccess_ia32.o signals_asm_ia32.o $(OBJECTS) -L$(DRLVM_HOME)$(ENV)build/deploy/lib $(SLDEXTRAFLAGS) -lencoder $(SLDSYSLIBS)  
+	cp libch.so $(DRLVM_HOME)$(ENV)build/deploy/jdk/jre/bin/default
+	
+clean: 
+	rm -f libch.so memaccess_ia32.o signals_asm_ia32.o $(OBJECTS)
+
+

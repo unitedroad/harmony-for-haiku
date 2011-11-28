@@ -1,0 +1,14 @@
+java/lang/instrument/ClassDefinition.*
+java/lang/instrument/ClassDefinition$*.*
+java/lang/instrument/ClassFileTransformer.*
+java/lang/instrument/ClassFileTransformer$*.*
+java/lang/instrument/IllegalClassFormatException.*
+java/lang/instrument/IllegalClassFormatException$*.*
+java/lang/instrument/Instrumentation.*
+java/lang/instrument/Instrumentation$*.*
+java/lang/instrument/UnmodifiableClassException.*
+java/lang/instrument/UnmodifiableClassException$*.*
+org/apache/harmony/instrument/internal/InstrumentationImpl.*
+org/apache/harmony/instrument/internal/InstrumentationImpl$*.*
+org/apache/harmony/instrument/internal/nls/Messages.*
+org/apache/harmony/instrument/internal/nls/Messages$*.*

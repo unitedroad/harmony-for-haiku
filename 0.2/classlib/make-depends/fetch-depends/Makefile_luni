@@ -1,0 +1,13 @@
+include defines.mk
+FDLIBM_DIR=$(DEPENDS_DIR)oss/fdlibm-5.3
+FDLIBM_TAR=$(FDLIBM_DIR)/fdlibm53.tar.gz
+FDLIBM_URL=http://www.validlab.com/software/fdlibm53.tar.gz
+FDLIBM_MD5=e56ca86c077dee87faf6a2c2cc1c10a5
+FDLIBM_DIST_DIR = $(BASE_DIR)modules/luni/src/main/native/
+make-depends-fdlibm:
+	test ! -d $(FDLIBM_DIST_DIR)fdlibm_dist/ || \
+	rm -r $(FDLIBM_DIST_DIR)fdlibm_dist/
+	test -d $(FDLIBM_DIR) || mkdir $(FDLIBM_DIR)	
+	test -f $(FDLIBM_TAR) || wget $(FDLIBM_URL) -O $(FDLIBM_TAR) 	
+	tar -zxvf $(FDLIBM_TAR) -C $(FDLIBM_DIST_DIR)
+	mv $(FDLIBM_DIST_DIR)fdlibm53 $(FDLIBM_DIST_DIR)fdlibm_dist/	

@@ -1,0 +1,4 @@
+java/security/AccessControlContext.*
+java/security/AccessControlContext$*.*
+java/security/AccessController.*
+java/security/AccessController$*.*
