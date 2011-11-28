@@ -1,8 +1,0 @@
-HAIKUUNDEF_0.1 {
-  global :
-	pthread_attr_getstack;
-    pthread_attr_setschedpolicy;
-    pthread_getattr_np;
-    pthread_attr_getguardsize;
-  local : *;
-};

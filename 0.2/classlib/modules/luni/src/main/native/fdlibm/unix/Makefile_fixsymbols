@@ -1,6 +1,0 @@
-all: fix_symbols
-
-.PHONY: fix_symbols
-
-fix_symbols:
-	objcopy --prefix-symbols=fdlibm_ $(HY_HDK)/lib/libhyfdlibm.a

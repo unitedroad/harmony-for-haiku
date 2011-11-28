@@ -1,4 +1,0 @@
-include $(HY_HDK)/build/make/defines.mk
-
-copy:
-	cp ../libhythr.so $(DLLPATH) 
