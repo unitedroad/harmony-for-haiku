@@ -47,7 +47,9 @@
         <check-one-file dest="${icuhdr}" src="${icuhdr.url}"/>
         <check-one-file dest="${icudll}" src="${icudll.url}"/>
         <mkdir dir="${drlvm.include.dir}/unicode"/>
-        <unzip src="${icuhdr}" dest="${drlvm.include.dir}/unicode"/>
+        <unzip src="${icuhdr}" dest="${drlvm.include.dir}/unicode">
+            <mapper type="flatten"/>
+        </unzip>
         <unzip src="${icudll}" dest="${drlvm.bin.dir}">
             <patternset> 
                 <exclude name="*${linklib.suffix}" unless="shlib.is.linklib"/>

@@ -33,10 +33,10 @@
 
     <target name="clean" depends="-clean-java,-clean-native,-clean-test" />
 
-    <target name="check-depends" depends="-check-depends,-extract" />
+    <target name="check-depends" depends="-extract-haiku,-check-depends,-extract" />
 
     <target name="-check-depends"
-            depends="-check-win-depends,-check-unix-depends">
+            depends="-check-win-depends,-check-haiku-depends,-check-unix-depends">
         <check-one-file src="${dejavu-fonts.url}" dest="${dejavu-fonts.zip}" />
     </target>
 
@@ -45,13 +45,20 @@
         <check-one-file src="${lcms.url}" dest="${lcms.tar}" />
         <check-one-file src="${png.url}" dest="${png.tar}" />
     </target>
-
+    
+    <target name="-check-haiku-depends" if="is.haiku">
+    	<check-one-file src="${lcms.src.zip.url}" dest="${lcms.src.zip}" />
+    </target>
     <target name="-check-unix-depends" if="is.unix">
         <property name="jpeg.msg"
                   value="libjpeg development package not installed
 ${line.separator}For Debian/Ubuntu try: apt-get install libjpeg62-dev
 ${line.separator}For Fedora try: yum install libjpeg-devel" />
-        <check-os-file src="${jpeg.home}/include/jconfig.h"
+		<condition property="jconfig.loc" value="${jpeg.home}">
+			<isset property="is.haiku"/>
+		</condition>
+		<property name ="jconfig.loc" value="${jpeg.home}/include"/>
+        <check-os-file src="${jconfig.loc}/jconfig.h"
                        message="${jpeg.msg}" />
 
         <property name="lcms.msg"
@@ -65,12 +72,16 @@ ${line.separator}For Fedora try: yum install lcms-devel" />
                   value="libpng development package not installed
 ${line.separator}For Debian/Ubuntu try: apt-get install libpng12-dev
 ${line.separator}For Fedora try: yum install libpng-devel" />
-        <check-os-file src="${png.home}/include/png.h"
+		<condition property="png_h.loc" value="${png.home}">
+			<isset property="is.haiku"/>
+		</condition>
+		<property name ="png_h.loc" value="${png.home}/include"/>
+        <check-os-file src="${png_h.loc}/png.h"
                        message="${png.msg}" />
     </target>
 
     <target name="-extract"
-            depends="-extract-props,-extract-dejavu-fonts,-extract-win" />
+            depends="-extract-props,-extract-dejavu-fonts,-extract-win,-extract-haiku" />
 
     <target name="-extract-props">
         <uptodate property="dejavu-fonts.uptodate"
@@ -82,6 +93,9 @@ ${line.separator}For Fedora try: yum install libpng-devel" />
         <unzip src="${dejavu-fonts.zip}" dest="${dejavu-fonts.dir}" />
         <touch file="${dejavu-fonts.fonts.dir}/DejaVuSerif.ttf" />
     </target>
+
+ <target name="-extract-haiku"
+            depends="-ext-lcms-haiku" />
 
     <target name="-extract-win"
             depends="-ext-props,-ext-jpeg,-ext-lcms,-ext-png" />
@@ -98,6 +112,11 @@ ${line.separator}For Fedora try: yum install libpng-devel" />
                   targetfile="${png.testfile}" />
     </target>
 
+ 	<target name="-ext-lcms-haiku" if="is.haiku" unless="lcms.uptodate">
+        <echo>Extracting lcms dependencies</echo>
+        <unzip src="${lcms.src.zip}" dest="${lcms.src}/.."/>
+    </target>
+    
     <target name="-ext-jpeg" if="is.windows" unless="jpeg.uptodate">
         <echo>Extracting jpeg dependencies</echo>
         <untar src="${jpeg.tar}" dest="${depends.lib.dir}" compression="gzip" />
@@ -114,13 +133,18 @@ ${line.separator}For Fedora try: yum install libpng-devel" />
         <touch file="${png.testfile}" />
     </target>
 
-    <target name="fetch-depends" depends="-fetch-win-depends">
+    <target name="fetch-depends" depends="-fetch-win-depends,-fetch-haiku-depends">
         <mkdir dir="${dejavu-fonts.dir}" />
         <download-one-file src="${dejavu-fonts.url}" dest="${dejavu-fonts.zip}"
                            md5="${dejavu-fonts.md5}" />
     </target>
 
-    <target name="-fetch-win-depends" if="is.windows">
+    <target name="-fetch-haiku-depends" if="is.haiku">
+        <mkdir dir="${lcms.src}" />
+        <download-one-file src="${lcms.src.zip.url}"
+                           dest="${lcms.src.zip}" md5="15f61690136fdef0ece42631ebcaf122"/>
+    </target>
+        <target name="-fetch-win-depends" if="is.windows">
         <mkdir dir="${jpeg.dir}" />
         <download-one-file src="${jpeg.url}"
                            dest="${jpeg.tar}"
@@ -222,11 +246,16 @@ ${line.separator}For Fedora try: yum install libpng-devel" />
             <fileset dir="src/main/java/${hy.os.family}" />
         </hy.jar.src>
     </target>
-
-    <target name="-build-native" unless="skip.native.build"
+	<condition property="skip.native.build.haiku">
+	  <or>
+	    <isset property="skip.native.build"/>
+	    <isset property="is.haiku"/>
+	  </or>
+	</condition>
+    <target name="-build-native" unless="skip.native.build.haiku"
             depends="-build-native-common,
                      -build-native-unix,-build-native-windows" />
-    <target name="-build-native-common" unless="skip.native.build">
+    <target name="-build-native-common" unless="skip.native.build.haiku">
         <make dir="src/main/native/lcmm/${hy.os.family}">
             <make-elements>
                 <env key="HY_LCMS_DIR" value="${lcms.dir}" />
@@ -252,7 +281,7 @@ ${line.separator}For Fedora try: yum install libpng-devel" />
         <make dir="src/main/native/fontlib/${hy.os.family}" />
     </target>
 
-    <target name="-build-native-unix" if="is.unix" unless="skip.native.build">
+    <target name="-build-native-unix" if="is.unix" unless="skip.native.build.haiku">
         <make dir="src/main/native/x11wrapper/${hy.os.family}" />
         <make dir="src/main/native/linuxfont/${hy.os.family}" />
     </target>

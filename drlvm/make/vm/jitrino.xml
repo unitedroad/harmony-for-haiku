@@ -88,7 +88,7 @@
                 <libset libs="harmonyvm,encoder,hythr" dir="${drlvm.lib.dir}" if="is.windows"/>
                 <linkerarg value="/OPT:REF" if="is.windows"/>
         
-                <syslibset type="shared" libs="m" if="is.unix"/>
+                <!-- <syslibset type="shared" libs="m" if="is.unix"/> -->
                 <syslibset type="shared" libs="dl" if="is.linux"/>
                 <linkerarg value="--version-script=${vm.home}/jitrino/build/jitrino.exp" if="is.unix"/>
             </linker>
@@ -184,7 +184,8 @@
             <compiler id="plaf.cpp.compiler" extends="common.cpp.compiler">
                 <compilerarg value="-fmessage-length=0" if="is.gcc"/>
                 <compilerarg value="-Wall" if="is.gcc"/>
-                <compilerarg value="-Werror" if="is.gcc"/>
+                <!--We will fix this later, we currently need to make ant work for Haiku -->
+                <!-- <compilerarg value="-Werror" if="is.gcc" unless="is.haiku"/> -->
                 <compilerarg value="-Wno-uninitialized" if="is.gcc"/>
 
                 <compilerarg value="-x" />

@@ -27,6 +27,15 @@
 
     <property file="${user.home}/.harmony-classlib.properties" />
 
+	<condition property="run.svn.info">
+		<not>
+			<or>
+				<isset property="svn.info"/>
+				<isset property="is.haiku"/>
+			</or>
+		</not>
+	</condition>
+	
     <fail message="Property 'hy.hdk' is not defined">
         <condition>
             <not><isset property="hy.hdk" /></not>
@@ -93,6 +102,9 @@
     </condition>
     <condition property="is.zos">
         <os name="z/OS" />
+    </condition>
+    <condition property="is.haiku">
+        <os name="haiku" />
     </condition>
 
     <!-- Normalized operating system family -->
@@ -276,6 +288,9 @@
     <condition property="png.home" value="/sw">
         <isset property="is.macosx"/>
     </condition>
+    <condition property="png.home" value="/boot/develop/headers/3rdparty">
+        <isset property="is.haiku"/>
+    </condition>
     <property name="png.home" value="/usr" />
 
     <condition property="lcms.home" value="/usr/local">
@@ -284,6 +299,9 @@
     <condition property="lcms.home" value="/sw">
         <isset property="is.macosx"/>
     </condition>
+    <condition property="lcms.home" value="${lcms.src}">
+        <isset property="is.haiku"/>
+    </condition>
     <property name="lcms.home" value="/usr" />
 
     <condition property="jpeg.home" value="/usr/local">
@@ -291,6 +309,9 @@
     </condition>
     <condition property="jpeg.home" value="/sw">
         <isset property="is.macosx"/>
+    </condition>
+    <condition property="jpeg.home" value="/boot/develop/headers/3rdparty/">
+        <isset property="is.haiku"/>
     </condition>
     <property name="jpeg.home" value="/usr" />
     
@@ -422,6 +443,7 @@ Harmony platform properties:
   is.macosx = ${is.macosx}
   is.aix = ${is.aix}
   is.zos = ${is.zos}
+  is.haiku = ${is.haiku}
   is.32bit = ${is.32bit}
   is.64bit = ${is.64bit}
   is.x86 = ${is.x86}
@@ -478,7 +500,7 @@ properties in preference to these:
         </exec>
     </target>
 
-    <target name="-svn-info" unless="svn.info">
+    <target name="-svn-info" if="run.svn.info">
         <exec executable="svn"
               failifexecutionfails="false"
               resultproperty="svn.rc">

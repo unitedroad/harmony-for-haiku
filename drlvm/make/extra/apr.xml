@@ -34,6 +34,10 @@
         <mkdir dir="${apr.src}/.." />
         <untar src="${apr.src.tgz}" dest="${apr.src}/.." compression="gzip"/>
         <move tofile="${apr.src}" file="${apr.src}/../${apr.src.rootdir}"/>
+        <get dest="config.sub" src="${config.sub.url}"/>
+        <move tofile="${apr.src}/build/config.sub" file="config.sub" overwrite="true" force="true"/>
+    	<get dest="config.guess" src="${config.guess.url}"/>
+        <move tofile="${apr.src}/build/config.guess" file="config.guess" overwrite="true" force="true"/>
     </target>
 
     <target name="-setup">

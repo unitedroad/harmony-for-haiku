@@ -49,14 +49,22 @@
                   value="libjpeg development package not installed
 ${line.separator}For Debian/Ubuntu try: apt-get install libjpeg62-dev
 ${line.separator}For Fedora try: yum install libjpeg-devel" />
-        <check-os-file src="${jpeg.home}/include/jconfig.h"
+		<condition property="jconfig.loc" value="${jpeg.home}">
+			<isset property="is.haiku"/>
+		</condition>
+		<property name ="jconfig.loc" value="${jpeg.home}/include"/>
+        <check-os-file src="${jconfig.loc}/jconfig.h"
                        message="${jpeg.msg}" />
 
         <property name="png.msg"
                   value="libpng development package not installed
 ${line.separator}For Debian/Ubuntu try: apt-get install libpng12-dev
 ${line.separator}For Fedora try: yum install libpng-devel" />
-        <check-os-file src="${png.home}/include/png.h"
+		<condition property="png_h.loc" value="${png.home}">
+			<isset property="is.haiku"/>
+		</condition>
+		<property name ="png_h.loc" value="${png.home}/include"/>
+        <check-os-file src="${png_h.loc}/png.h"
                        message="${png.msg}" />
     </target>
 

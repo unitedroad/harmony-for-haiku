@@ -47,7 +47,11 @@
             <defineset define="HYX86_64" if="is.x86_64"/>
             
             <defineset define="POINTER64" if="is.64bit"/>
-
+			
+			<defineset if="is.haiku">
+				<define name="HAIKU"/>
+			</defineset>
+			
             <defineset if="is.ppc32"> 
                 <define name="_PPC32_"/>
                 <define name="_PPC_"/>
@@ -83,6 +87,7 @@
             <defineset define="MACOSX" if="is.macosx"/>
             <defineset define="FREEBSD" if="is.freebsd"/>
             <defineset define="LINUX" if="is.linux"/>
+            <defineset define="HAIKU"/>
 
             <defineset if="is.unix">
                 <define name="PLATFORM_POSIX"/>

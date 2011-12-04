@@ -31,8 +31,12 @@ DLL_LD = $(CC)
 DLL_LDFLAGS = -shared -Wl,-soname=$(@F) -Wl,--version-script,$(EXPFILE)
 CXX_DLL_LD = $(CXX)
 STDCLIBS = -lstdc++
-#OSLIBS = -lc
+OSTYPE=$(shell uname)
+ifneq ($(OSTYPE), Haiku)
+OSLIBS = -lc
+else
 OSLIBS = -lroot
+endif
 XLIBS = -L/usr/X11R6/lib -lX11 -lXft -lXext -lXtst
 MDLLIBPREFIX = -Xlinker --start-group
 MDLLIBSUFFIX = -Xlinker --end-group
