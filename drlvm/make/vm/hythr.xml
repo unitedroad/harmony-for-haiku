@@ -50,7 +50,7 @@
         <linker id="linker" extends="common.linker">
             <libset libs="port,apr-1"
                     dir="${drlvm.lib.dir}" />
-
+            <libset libs="haikuundef" dir="${drlvm.shlib.dir}"/>
             <linkerarg value="/DEF:${vm.home}/thread/src/hythr.def" if="is.windows"/>
 
             <syslibset type="shared" libs="stdc++,rt,pthread" if="is.linux"/>

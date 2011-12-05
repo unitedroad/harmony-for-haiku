@@ -118,7 +118,11 @@ Usage:
         <ant antfile="make/vm/encoder.xml"/>
     </target>
 
-    <target name="port" depends="build-extra">
+	<target name="haikuundef">
+		<ant antfile="make/vm/haikuundef.xml"/>
+	</target>
+	
+    <target name="port" depends="build-extra,haikuundef">
         <ant antfile="make/vm/port.xml"/>
     </target>
 
@@ -126,7 +130,7 @@ Usage:
         <ant antfile="make/vm/port_ch.xml"/>
     </target>
 
-    <target name="hythr" depends="port">
+    <target name="hythr" depends="port,haikuundef">
         <ant antfile="make/vm/hythr.xml"/>
     </target>
 

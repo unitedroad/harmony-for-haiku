@@ -191,6 +191,7 @@
                 <libset libs="ch" dir="${drlvm.shlib.dir}" />
                 <libset libs="hyzlib" dir="${hy.hdk.shlibs}"
                         unless="hy.skip.zlib"/>
+                <libset libs="haikuundef" dir="${drlvm.shlib.dir}"/>        
                 <syslibset type="shared" libs="z" if="hy.skip.zlib"/>
 
                 <linkerarg value="/DEF:${vm.home}/vmcore/src/harmonyvm64.def" if="is.windows.x86_64"/>

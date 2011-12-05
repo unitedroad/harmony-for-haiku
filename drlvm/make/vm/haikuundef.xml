@@ -1,0 +1,29 @@
+<project name="vmcore" default="build" basedir="../..">
+	
+	<property name="component" value="haikuundef" />
+	<import file="common-vm.xml" />
+	
+	<target name="build" depends="-common-vm">
+	<init-native component="haikuundef"/>
+	<compile-cc>
+		<compiler id="c.compiler" extends="common.c.compiler">
+		<fileset dir="${vm.home}/port/src">
+			<include name="haiku/*.cpp"/>
+			<include name="haiku/*.c"/>
+		</fileset>
+		</compiler>
+	</compile-cc>
+
+	<link-lib name="haikuundef" type="shared">
+		<linker id="linker" extends="common.linker">
+        	<linkerarg value="--version-script=${vm.home}/port/build/haikuundef.exp" if="is.unix"/>
+                
+            <linkerarg value="--export-dynamic" if="is.freebsd"/>
+        </linker>
+    </link-lib>
+    </target>
+    <target name="clean" >
+        <clean-native />
+    </target>
+</project>
+            
